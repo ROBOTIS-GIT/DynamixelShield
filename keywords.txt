@@ -13,54 +13,54 @@ DynamixelShield				KEYWORD1
 #######################################
 
 
-begin               KEYWORD2
+begin	KEYWORD2
    
-scan                KEYWORD2
-ping                KEYWORD2
-addMotor            KEYWORD2
-setProtocolVersion  KEYWORD2 
-write               KEYWORD2
-read                KEYWORD2
+scan	KEYWORD2
+ping	KEYWORD2
+addMotor	KEYWORD2
+setProtocolVersion	KEYWORD2 
+write	KEYWORD2
+read	KEYWORD2
 
-getDxlCount         KEYWORD2
-getDxlID            KEYWORD2
-getErr              KEYWORD2
-clearErr            KEYWORD2
+getDxlCount	KEYWORD2
+getDxlID	KEYWORD2
+getErr	KEYWORD2
+clearErr	KEYWORD2
 
-reboot              KEYWORD2
-reset               KEYWORD2
+reboot	KEYWORD2
+reset	KEYWORD2
 
-setID               KEYWORD2
-setBaud             KEYWORD2
+setID	KEYWORD2
+setBaud	KEYWORD2
 
-ledOn               KEYWORD2
-ledOff              KEYWORD2
+ledOn	KEYWORD2
+ledOff	KEYWORD2
 
-torqueOn            KEYWORD2
-torqueOff           KEYWORD2
+torqueOn	KEYWORD2
+torqueOff	KEYWORD2
 
-setJointMode        KEYWORD2
-setWheelMode        KEYWORD2
+setJointMode	KEYWORD2
+setWheelMode	KEYWORD2
   
-setGoalPosition     KEYWORD2
-getGoalPosition     KEYWORD2
-getCurPosition      KEYWORD2
+setGoalPosition	KEYWORD2
+getGoalPosition	KEYWORD2
+getCurPosition	KEYWORD2
 
-setGoalSpeed        KEYWORD2
-getGoalSpeed        KEYWORD2
-getCurSpeed         KEYWORD2
+setGoalSpeed	KEYWORD2
+getGoalSpeed	KEYWORD2
+getCurSpeed	KEYWORD2
 
-setGoalAngle        KEYWORD2
-getGoalAngle        KEYWORD2
-getCurAngle         KEYWORD2
+setGoalAngle	KEYWORD2
+getGoalAngle	KEYWORD2
+getCurAngle	KEYWORD2
 
-syncWriteBegin      KEYWORD2
-syncWriteEnd        KEYWORD2
+syncWriteBegin	KEYWORD2
+syncWriteEnd	KEYWORD2
 
-available           KEYWORD2
-peek                KEYWORD2
-read                KEYWORD2
-flush               KEYWORD2
+available	KEYWORD2
+peek	KEYWORD2
+read	KEYWORD2
+flush	KEYWORD2
 
 
 
