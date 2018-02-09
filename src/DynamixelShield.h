@@ -14,7 +14,10 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Hancheol Cho (Baram) */
+/* 
+ * Authors: Hancheol Cho (Baram) 
+ *          KyungWan Ki  (Kei)
+ */
 
 #ifndef DYNAMIXEL_SHIELD_H_
 #define DYNAMIXEL_SHIELD_H_
@@ -88,8 +91,9 @@ private:
   uint16_t        sync_write_version;
 
 public:
+#ifdef ARDUINO_ARCH_AVR
   RC100 rc100;
-  
+#endif
 
 public:
   DynamixelShield();

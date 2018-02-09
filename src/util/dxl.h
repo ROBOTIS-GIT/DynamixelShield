@@ -2,7 +2,9 @@
  * dxl.h
  *
  *  Created on: 2017. 4. 11.
- *      Author: Baram
+ *
+ *  Authors: Hancheol Cho (Baram) 
+ *           KyungWan Ki  (Kei)
  */
 
 #ifndef DXL_H_

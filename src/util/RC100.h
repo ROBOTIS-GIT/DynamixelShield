@@ -28,12 +28,20 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Taehoon Lim (Darby), HanCheol Cho, Ashe Kim */
+/* 
+ *  Authors: Taehoon Lim (Darby)
+ *           Hancheol Cho (Baram) 
+ *           Ashe Kim
+ *           KyungWan Ki  (Kei)
+ */
 
 #ifndef RC100_H_
 #define RC100_H_
 
 #include <Arduino.h>
+
+#ifdef ARDUINO_ARCH_AVR
+
 #include <SoftwareSerial.h>
 
 
@@ -89,4 +97,7 @@ class RC100 {
   bool rc100Update(uint8_t data);
   bool rc100Receive(unsigned char *pPacket, int numPacket);
 };
+
+#endif /* ARDUINO_ARCH_AVR */
+
 #endif /* RC100_H_ */

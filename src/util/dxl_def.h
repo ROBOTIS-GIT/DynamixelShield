@@ -4,7 +4,9 @@
  *  dynamixel define
  *
  *  Created on: 2016. 10. 21.
- *      Author: Baram
+ *
+ *  Authors: Hancheol Cho (Baram) 
+ *           KyungWan Ki  (Kei)
  */
 
 #ifndef DXL_DEF_H
@@ -17,8 +19,16 @@
 #include <stdio.h>
 
 
+#if defined(ARDUINO_AVR_LEONARDO) || defined(ARDUINO_AVR_LEONARDO_ETH) || defined(ARDUINO_AVR_INDUSTRIAL101)
+#define DXL_PORT Serial1
+#elif defined(ARDUINO_SAM_ZERO)
+#define DXL_PORT Serial5
+#elif defined(ARDUINO_OpenCR)
+#define DXL_PORT Serial1
+#else
+#define DXL_PORT Serial  
+#endif
 
-#define DXL_PORT                  Serial
 
 
 #define DXL_ID_BROADCAST_ID       0xFE
@@ -65,8 +75,9 @@
 #define ERR_DXL_NOT_FOUND             1002
 
 
-
+#if !defined(BOARD_OpenCR)
 typedef uint32_t  err_code_t;
+#endif
 
 typedef union
 {

@@ -28,9 +28,16 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Taehoon Lim (Darby), HanCheol Cho, Ashe Kim */
+/* 
+ *  Authors: Taehoon Lim (Darby)
+ *           Hancheol Cho (Baram) 
+ *           Ashe Kim
+ *           KyungWan Ki  (Kei)
+ */
 
 #include "RC100.h"
+
+#ifdef ARDUINO_ARCH_AVR
 
 RC100::RC100(uint8_t rx_pin, uint8_t tx_pin)
 {
@@ -208,3 +215,4 @@ bool RC100::rc100Update(uint8_t data)
 
   return ret;
 }
+#endif /* ARDUINO_ARCH_AVR */

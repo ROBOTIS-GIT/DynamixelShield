@@ -4,7 +4,9 @@
  *  dynamixel hardware
  *
  *  Created on: 2016. 10. 21.
- *      Author: Baram
+ *  
+ *  Authors: Hancheol Cho (Baram) 
+ *           KyungWan Ki  (Kei)
  */
 
 #ifndef DXL_CMD_H

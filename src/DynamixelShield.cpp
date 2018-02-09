@@ -14,16 +14,17 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Authors: Hancheol Cho (Baram) */
+/* 
+ * Authors: Hancheol Cho (Baram) 
+ *          KyungWan Ki  (Kei)
+ */
 
 #include "DynamixelShield.h"
 
 
-
-
-
-
-
+#ifndef SoftwareSerial_h
+#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
+#endif
 
 
 
@@ -49,11 +50,13 @@ bool DynamixelShield::begin(uint32_t baud_rate, uint8_t protocol_version)
   bool ret = true;
   
   dxlInit(&dxl_cmd, protocol_version);
-  dxlSetSerial(&dxl_cmd, &Serial);
+  dxlSetSerial(&dxl_cmd, &DXL_PORT);
   dxlSetDirPin(&dxl_cmd, 2);
   dxlOpenPort(&dxl_cmd, baud_rate);      
 
+#ifdef ARDUINO_ARCH_AVR
   rc100.begin();
+#endif
 
   dxl_info.id_count = 0;
   sync_write_enable = false;
@@ -715,29 +718,40 @@ bool DynamixelShield::syncWriteEnd(void)
   return ret;
 }
 
+
 int DynamixelShield::available( void )
 {
+#ifdef ARDUINO_ARCH_AVR
   return rc100.p_serial->available();
+#endif
 }
 
 int DynamixelShield::peek( void )
 {
+#ifdef ARDUINO_ARCH_AVR
   return rc100.p_serial->peek();
+#endif
 }
 
 void DynamixelShield::flush( void )
 {
+#ifdef ARDUINO_ARCH_AVR
   rc100.p_serial->flush();
+#endif
 }
 
 int DynamixelShield::read( void )
 {
+#ifdef ARDUINO_ARCH_AVR
   return rc100.p_serial->read();
+#endif
 }
 
 size_t DynamixelShield::write( const uint8_t uc_data )
 {
+#ifdef ARDUINO_ARCH_AVR
   return rc100.p_serial->write(uc_data);
+#endif
 }
 
 uint8_t DynamixelShield::getDxlModelIndex(uint16_t model_number)
