@@ -6,19 +6,18 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-DynamixelShield				KEYWORD1
+DynamixelShield KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-
 begin	KEYWORD2
    
-scan	KEYWORD2
-ping	KEYWORD2
+scan  KEYWORD2
+ping  KEYWORD2
 addMotor	KEYWORD2
-setProtocolVersion	KEYWORD2 
+setProtocolVersion  KEYWORD2 
 write	KEYWORD2
 read	KEYWORD2
 
@@ -57,12 +56,10 @@ getCurAngle	KEYWORD2
 syncWriteBegin	KEYWORD2
 syncWriteEnd	KEYWORD2
 
-available	KEYWORD2
-peek	KEYWORD2
-read	KEYWORD2
-flush	KEYWORD2
-
-
+available KEYWORD2
+peek  KEYWORD2
+read  KEYWORD2
+flush KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
