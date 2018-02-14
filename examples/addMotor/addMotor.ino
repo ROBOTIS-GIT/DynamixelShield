@@ -1,16 +1,10 @@
 /*
-#define M_AX12    
-#define M_AX18    
-#define M_RX24    
-#define M_RX28    
-#define M_RX64    
-#define M_EX106   
-#define M_MX28    
-#define M_MX64    
-#define M_MX106   
-#define M_MX28_2  
-#define M_MX64_2  
-#define M_MX106_2 
+#define M_AX12    ((uint8_t)0)
+#define M_AX18    ((uint8_t)1)
+#define M_XL320   ((uint8_t)2)
+#define M_XL430   ((uint8_t)3)
+#define M_XM430   ((uint8_t)4)
+#define M_XM540   ((uint8_t)5)
 */
 
 
