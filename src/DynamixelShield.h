@@ -31,13 +31,28 @@
 
 
 
-#define M_AX12    ((uint8_t)0)
-#define M_AX18    ((uint8_t)1)
-#define M_XL320   ((uint8_t)2)
-#define M_XL430   ((uint8_t)3)
-#define M_XM430   ((uint8_t)4)
-#define M_XM540   ((uint8_t)5)
+#define M_AX      ((uint8_t)0)
+#define M_RX      ((uint8_t)1)
+#define M_EX      ((uint8_t)2)
+#define M_MX      ((uint8_t)3)
+#define M_MX2     ((uint8_t)4)
+#define M_XL320   ((uint8_t)5)
+#define M_XL430   ((uint8_t)6)
+#define M_XM430   ((uint8_t)7)
+#define M_XM540   ((uint8_t)8)
 
+#define M_AX12    M_AX
+#define M_AX18    M_AX
+#define M_RX24    M_RX
+#define M_RX28    M_RX
+#define M_RX64    M_RX
+#define M_EX106   M_EX
+#define M_MX28    M_MX
+#define M_MX64    M_MX
+#define M_MX106   M_MX
+#define M_MX28_2  M_MX2
+#define M_MX64_2  M_MX2
+#define M_MX106_2 M_MX2
 
 
 typedef struct
