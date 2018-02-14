@@ -763,11 +763,32 @@ uint8_t DynamixelShield::getDxlModelIndex(uint16_t model_number)
   {
     case 12:    // AX12+
     case 300:   // AX12W
-      model_index = M_AX12;
+    case 18:    // AX18
+    case 24:    // RX-24F
+    case 28:    // RX-28
+    case 64:    // RX-64
+      model_index = M_AX;
       break;
 
-    case 18:    // AX18
-      model_index = M_AX18;
+    case 106:   // EX-106
+    case 107:   // EX-106+
+      model_index = M_EX;
+      break;
+
+    case 29:    // MX-28
+    case 310:   // MX-64
+    case 320:   // MX-106
+      model_index = M_MX;
+      break;
+
+    case 30:    // MX-28(2.0)
+    case 311:   // MX-64(2.0)
+    case 321:   // MX-106(2.0)
+      model_index = M_MX2;
+      break;
+
+    case 350:   // XL320
+      model_index = M_XL320;
       break;
 
     case 1060:  // XL430-W250
@@ -805,8 +826,7 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
 {
   switch(model_index)
   {
-    case M_AX12:
-    case M_AX18:
+    case M_AX:
       p_model->protocol = DXL_PACKET_VER_1_0;
       p_model->goal_pos.addr   = 30;
       p_model->goal_pos.length = 2;
@@ -822,12 +842,26 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
       p_model->led.length = 1;   
       p_model->op_mode.addr   = 25;
       p_model->op_mode.length = 1; 
-      p_model->max_res = 1024;
-      p_model->max_angle = 3000;
       p_model->id.addr   = 3;
       p_model->id.length = 1;         
       p_model->baud.addr   = 4;
       p_model->baud.length = 1;               
+
+      if (model_index == M_EX)
+      {
+        p_model->max_res = 4096;
+        p_model->max_angle = 2509;        
+      }
+      else if (model_index == M_MX)
+      {
+        p_model->max_res = 4096;
+        p_model->max_angle = 3600;          
+      }
+      else
+      {
+        p_model->max_res = 1024;
+        p_model->max_angle = 3000;
+      }
       break;
 
     case M_XL320:
