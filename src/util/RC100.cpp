@@ -37,11 +37,12 @@
 
 #include "RC100.h"
 
-#ifdef ARDUINO_ARCH_AVR
 
 RC100::RC100(uint8_t rx_pin, uint8_t tx_pin)
 {
+#ifdef SoftwareSerial_h
   p_serial = new SoftwareSerial(rx_pin, tx_pin);
+#endif
 }
 
 RC100::~RC100()
@@ -50,11 +51,12 @@ RC100::~RC100()
 
 void RC100::begin()
 {
-
+#ifdef SoftwareSerial_h
   if (p_serial != NULL)
   {
     p_serial->begin(57600);
   }
+#endif  
   rc100_rx.state = 0;
   rc100_rx.index = 0;
   rc100_rx.received = false;
@@ -63,6 +65,7 @@ void RC100::begin()
 
 int RC100::available(void)
 {
+#ifdef SoftwareSerial_h  
   if (p_serial != NULL)
   {
     if(p_serial->available())
@@ -70,7 +73,7 @@ int RC100::available(void)
       return rc100Update(p_serial->read());
     }
   }
-
+#endif
   return 0;
 }
 
@@ -81,18 +84,22 @@ uint16_t RC100::readData(void)
 
 void RC100::writeRaw(uint8_t temp)
 {
+#ifdef SoftwareSerial_h
   if (p_serial != NULL)
   {
     p_serial->write(temp);
   }
+#endif
 }
 
 uint8_t RC100::readRaw(void)
 {
+#ifdef SoftwareSerial_h  
   if (p_serial != NULL)
   {
     return p_serial->read();
   }
+#endif  
 }
 
 bool RC100::availableEvent(void)
@@ -102,6 +109,7 @@ bool RC100::availableEvent(void)
   
   rc100_rx.released_event = false;
 
+#ifdef SoftwareSerial_h
   if (p_serial != NULL)
   {
     if(p_serial->available())
@@ -110,6 +118,7 @@ bool RC100::availableEvent(void)
       ret = rc100_rx.released_event;
     }
   }  
+#endif
   return ret;
 }
 
@@ -120,10 +129,12 @@ uint16_t RC100::readEvent(void)
 
 void RC100::clear(void)
 {
+#ifdef SoftwareSerial_h  
   while(p_serial->available())
   {
     p_serial->read();
   }  
+#endif
 }
 
 void RC100::flush(void)
@@ -215,4 +226,3 @@ bool RC100::rc100Update(uint8_t data)
 
   return ret;
 }
-#endif /* ARDUINO_ARCH_AVR */

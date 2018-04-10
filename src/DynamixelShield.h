@@ -106,9 +106,7 @@ private:
   uint16_t        sync_write_version;
 
 public:
-#ifdef ARDUINO_ARCH_AVR
   RC100 rc100;
-#endif
 
 public:
   DynamixelShield();

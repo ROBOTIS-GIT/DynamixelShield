@@ -23,7 +23,7 @@
 
 
 #ifndef SoftwareSerial_h
-//#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
+#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
 #endif
 
 
@@ -54,7 +54,7 @@ bool DynamixelShield::begin(uint32_t baud_rate, uint8_t protocol_version)
   dxlSetDirPin(&dxl_cmd, 2);
   dxlOpenPort(&dxl_cmd, baud_rate);      
 
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   rc100.begin();
 #endif
 
@@ -721,35 +721,35 @@ bool DynamixelShield::syncWriteEnd(void)
 
 int DynamixelShield::available( void )
 {
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   return rc100.p_serial->available();
 #endif
 }
 
 int DynamixelShield::peek( void )
 {
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   return rc100.p_serial->peek();
 #endif
 }
 
 void DynamixelShield::flush( void )
 {
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   rc100.p_serial->flush();
 #endif
 }
 
 int DynamixelShield::read( void )
 {
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   return rc100.p_serial->read();
 #endif
 }
 
 size_t DynamixelShield::write( const uint8_t uc_data )
 {
-#ifdef ARDUINO_ARCH_AVR
+#ifdef SoftwareSerial_h
   return rc100.p_serial->write(uc_data);
 #endif
 }

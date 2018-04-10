@@ -16,7 +16,7 @@ sleep 3
 export DISPLAY=:1.0
 
 # download and install arduino 1.8.5
-wget --quiet https://downloads.arduino.cc/arduino-1.8.5-linux64.tar.xz
+wget https://downloads.arduino.cc/arduino-1.8.5-linux64.tar.xz
 tar xf arduino-1.8.5-linux64.tar.xz
 mv arduino-1.8.5 $HOME/arduino_ide
 
@@ -33,6 +33,8 @@ echo "########################################################################";
 
 # install other board packages
 echo -n "ADD OpenCR PACKAGE INDEX: "
+DEPENDENCY_OUTPUT=$(arduino --pref "boardsmanager.additional.urls=boardsmanager.additional.urls=https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_release/package_opencr_index.json" --save-prefs 2>&1)
+DEPENDENCY_OUTPUT=$(arduino --pref "boardsmanager.additional.urls=boardsmanager.additional.urls=https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_release/package_opencr_index.json" --save-prefs 2>&1)
 DEPENDENCY_OUTPUT=$(arduino --pref "boardsmanager.additional.urls=boardsmanager.additional.urls=https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_release/package_opencr_index.json" --save-prefs 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
