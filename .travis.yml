@@ -1,53 +1,24 @@
 language: cpp
-
+sudo: false
 before_install:
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-  - sleep 3
-  - export DISPLAY=:1.0
-  - wget http://downloads.arduino.cc/arduino-1.8.5-linux64.tar.xz
-  - tar xf arduino-1.8.5-linux64.tar.xz
-  - sudo mv arduino-1.8.5 /usr/local/share/arduino
-  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
-  
-install:
-  - arduino --pref "boardsmanager.additional.urls=https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_release/package_opencr_index.json" --save-prefs
+  - source <(curl -SLs https://raw.githubusercontent.com/${TRAVIS_REPO_SLUG}/${TRAVIS_BRANCH}/install.sh)
 
-  - arduino --install-boards OpenCR:OpenCR
-  - arduino --install-boards arduino:sam
-  - arduino --install-boards arduino:samd
-
-  - arduino --install-library "DynamixelShield"
-  - ln -s $PWD /usr/local/share/arduino/libraries/DynamixelShield
-  
 script:
-  - arduino --verify --board ${BOARD} $PWD/examples/addMotor/addMotor.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/goalAngle/goalAngle.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/goalPosition/goalPosition.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/goalSpeed/goalSpeed.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/led/led.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/ping/ping.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/rc100/rc100.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/syncWrite/syncWrite.ino
-  - arduino --verify --board ${BOARD} $PWD/examples/torque/torque.ino
+  - build_platform uno
+  - build_platform mega2560
+  - build_platform leonardo
+  - build_platform due
+  - build_platform zero
+  - build_platform mzero
+  - build_platform mzeropro
+  - build_platform opencr
   
 notifications:
   email:
     on_success: change
-    on_failure: always
+    on_failure: change
     recipients:
       - kkw@robotis.com
       - chc@robotis.com
       - pyo@robotis.com
-    
-env:
- - BOARD=OpenCR:OpenCR:OpenCR
- - BOARD=arduino:avr:uno
- - BOARD=arduino:avr:mega:cpu=atmega1280
- - BOARD=arduino:avr:mega:cpu=atmega2560
- - BOARD=arduino:avr:leonardo
- - BOARD=arduino:sam:arduino_due_x
- - BOARD=arduino:samd:arduino_zero_native
- - BOARD=arduino:samd:mzero_bl
- - BOARD=arduino:samd:mzero_pro_bl
-
 
