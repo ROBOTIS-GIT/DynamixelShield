@@ -4,6 +4,7 @@ before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/${TRAVIS_REPO_SLUG}/${TRAVIS_BRANCH}/install.sh)
 
 script:
+  - build_platform opencr
   - build_platform uno
   - build_platform mega2560
   - build_platform leonardo
@@ -11,7 +12,6 @@ script:
   - build_platform zero
   - build_platform mzero
   - build_platform mzeropro
-  - build_platform opencr
   
 notifications:
   email:
