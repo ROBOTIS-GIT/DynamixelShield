@@ -22,3 +22,7 @@ notifications:
       - chc@robotis.com
       - pyo@robotis.com
 
+branches:
+  only:
+    - master
+    - develop
