@@ -41,9 +41,8 @@
 #include <Arduino.h>
 
 #ifdef ARDUINO_ARCH_AVR
-
 #include <SoftwareSerial.h>
-
+#endif
 
 ////////// define RC-100 button key value ////////////////
 #define RC100_BTN_U		(1)
@@ -78,7 +77,9 @@ class RC100 {
    void clear(void);
    void flush(void);
 
+#ifdef SoftwareSerial_h
    SoftwareSerial *p_serial;
+#endif
    
  private:
    typedef struct
@@ -97,7 +98,5 @@ class RC100 {
   bool rc100Update(uint8_t data);
   bool rc100Receive(unsigned char *pPacket, int numPacket);
 };
-
-#endif /* ARDUINO_ARCH_AVR */
 
 #endif /* RC100_H_ */
