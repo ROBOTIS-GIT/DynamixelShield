@@ -1,5 +1,5 @@
 language: cpp
-sudo: false
+
 before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/${TRAVIS_REPO_SLUG}/${TRAVIS_BRANCH}/install.sh)
 

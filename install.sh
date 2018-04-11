@@ -30,6 +30,10 @@ echo -e "\n#####################################################################
 echo "INSTALLING DEPENDENCIES"
 echo "########################################################################";
 
+# install i386 archtecture library
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install libc6:i386
 
 # install other board packages
 echo -n "ADD OpenCR PACKAGE INDEX: "
@@ -47,11 +51,6 @@ if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 echo -n "INSTALL OpenCR: "
 DEPENDENCY_OUTPUT=$(arduino --install-boards OpenCR:OpenCR 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
-
-echo $HOME
-ls $HOME/.arduino15/packages
-ls $HOME/.arduino15/packages/OpenCR/tools/opencr_gcc
-ls $HOME/.arduino15/packages/OpenCR/tools/opencr_gcc/5.4.0-2016q2/bin
 
 # install random lib so the arduino IDE grabs a new library index
 # see: https://github.com/arduino/Arduino/issues/3535
