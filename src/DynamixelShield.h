@@ -55,6 +55,9 @@
 #define M_MX64_2  M_MX2
 #define M_MX106_2 M_MX2
 
+#define M_BAUD_TYPE_0         0   // AX ~
+#define M_BAUD_TYPE_1         1   // XL320
+#define M_BAUD_TYPE_2         2   // X ~
 
 typedef struct
 {
@@ -66,6 +69,7 @@ typedef struct
 {
   uint8_t  protocol;
   uint8_t  id_index;
+  uint8_t  baud_type;
 
   dxl_model_addr_t goal_pos;  
   dxl_model_addr_t cur_pos;  
@@ -169,11 +173,13 @@ private:
   uint8_t getDxlModelIndex(uint16_t model_number);
   uint8_t getDxlIdIndex(uint8_t id);
   bool getDxlModelFromID(uint8_t id, dxl_model_t *p_model);
+  int16_t getBaudIndex(uint32_t baud, uint8_t baud_type);
 
   int32_t getPosFromAngle(dxl_model_t *p_model, int32_t angle);
   int32_t getAngleFromPos(dxl_model_t *p_model, int32_t pos);
 
-  bool addSyncWrite(uint8_t id, uint16_t addr, uint8_t *p_data, uint16_t length);
+  bool addSyncWrite(uint8_t id, uint16_t addr, uint8_t *p_data, uint16_t length);  
+
 };
 
 #endif 

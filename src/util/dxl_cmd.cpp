@@ -181,7 +181,7 @@ dxl_error_t dxlcmdPing(dxl_t *p_packet, uint8_t id, dxlcmd_resp_ping_t *p_resp, 
     while(1)
     {
       dxl_ret = dxlRxPacket(p_packet);
-      if (dxl_ret == DXL_RET_RX_STATUS)
+      if (dxl_ret == DXL_RET_RX_STATUS && p_resp->id_count < DXLCMD_MAX_NODE)
       {
         p_packet->rx_time = micros() - pre_time_us;
         pre_time_ms       = millis();
