@@ -122,18 +122,18 @@ bool DynamixelShield::ping(uint8_t id)
 
     dxl_err = dxlcmdPing(&dxl_cmd, DXL_GLOBAL_ID, &resp.ping, 500);  
     dxl_cnt = resp.ping.id_count;
-    
+
     for (i=0; i<dxl_cnt; i++)
     {
       id_i = resp.ping.p_node[i]->id;
-      dxl_err = dxlcmdPing(&dxl_cmd, id_i, &resp.ping, 10);  
+      dxl_err = dxlcmdRead(&dxl_cmd, id_i, 0, 2, &resp.read, 20);
 
-      if (dxl_err == DXL_RET_RX_RESP && resp.ping.id_count > 0)
+      if (dxl_err == DXL_RET_RX_RESP)
       {        
         if (dxl_info.id_count < DXLCMD_MAX_NODE)
         {
           dxl_info.id_info[dxl_info.id_count]  = id_i;
-          dxl_info.id_model[dxl_info.id_count] = getDxlModelIndex(resp.ping.p_node[0]->model_number);
+          dxl_info.id_model[dxl_info.id_count] = getDxlModelIndex(resp.read.p_node[0]->p_data[1]<<8 | resp.read.p_node[0]->p_data[0]<<0);
           dxl_info.id_count++;      
         }
         err_code = ERR_NONE;
@@ -414,7 +414,7 @@ bool DynamixelShield::ledOn(uint8_t id)
   ret = getDxlModelFromID(id, &dxl_model);
 
   if (ret == true)
-  {
+  {    
     data = 1;
     ret = write(id, dxl_model.led.addr, (uint8_t *)&data, dxl_model.led.length, 100);
   }
