@@ -119,8 +119,11 @@ bool DynamixelShield::ping(uint8_t id)
   {
     dxl_info.id_count = 0;
 
-    for (id_i=1; id_i<32; id_i++)
+    dxl_err = dxlcmdPing(&dxl_cmd, DXL_GLOBAL_ID, &resp.ping, 500);  
+
+    for (i=0; i<resp.ping.id_count; i++)
     {
+      id_i = resp.ping.p_node[i]->id;
       dxl_err = dxlcmdPing(&dxl_cmd, id_i, &resp.ping, 10);  
 
       if (dxl_err == DXL_RET_RX_RESP && resp.ping.id_count > 0)
@@ -252,10 +255,108 @@ bool DynamixelShield::setBaud(uint8_t id, uint32_t new_baud)
 
   if (ret == true)
   {
-    ret = write(id, dxl_model.baud.addr, (uint8_t *)&new_baud, dxl_model.baud.length, 100);
+    int16_t baud_index;
+
+    baud_index = getBaudIndex(new_baud, dxl_model.baud_type);
+    if (baud_index >= 0)
+    {
+      new_baud = baud_index;
+      ret = write(id, dxl_model.baud.addr, (uint8_t *)&new_baud, dxl_model.baud.length, 100);
+    }
   }
 
   return ret;
+}
+
+int16_t DynamixelShield::getBaudIndex(uint32_t baud, uint8_t baud_type)
+{
+  int16_t baud_index = -1;
+  
+  switch(baud)
+  {
+    case 4000000:
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 6;
+      }
+      break;
+
+    case 3000000:
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 5;
+      }
+      break;
+
+    case 2000000:
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 4;
+      }
+      break;
+
+    case 1000000:
+      if (baud_type == M_BAUD_TYPE_0)
+      {
+        baud_index = 1;
+      }
+      if (baud_type == M_BAUD_TYPE_1)
+      {
+        baud_index = 3;
+      }
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 3;
+      }
+      break;
+
+    case 115200:
+      if (baud_type == M_BAUD_TYPE_0)
+      {
+        baud_index = 16;
+      }
+      if (baud_type == M_BAUD_TYPE_1)
+      {
+        baud_index = 2;
+      }
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 2;
+      }
+      break;
+
+    case 57600:
+      if (baud_type == M_BAUD_TYPE_0)
+      {
+        baud_index = 34;
+      }
+      if (baud_type == M_BAUD_TYPE_1)
+      {
+        baud_index = 1;
+      }      
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 1;
+      }
+      break;
+
+    case 9600:
+      if (baud_type == M_BAUD_TYPE_0)
+      {
+        baud_index = 207;
+      }
+      if (baud_type == M_BAUD_TYPE_1)
+      {
+        baud_index = 0;
+      }
+      if (baud_type == M_BAUD_TYPE_2)
+      {
+        baud_index = 0;
+      }
+      break;
+  }
+
+  return baud_index;
 }
 
 bool DynamixelShield::write(uint8_t id, uint16_t addr, uint8_t *p_data, uint16_t length, uint32_t timeout)
@@ -845,7 +946,8 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
       p_model->id.addr   = 3;
       p_model->id.length = 1;         
       p_model->baud.addr   = 4;
-      p_model->baud.length = 1;               
+      p_model->baud.length = 1;       
+      p_model->baud_type = M_BAUD_TYPE_0;        
 
       if (model_index == M_EX)
       {
@@ -887,7 +989,8 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
       p_model->id.addr   = 3;
       p_model->id.length = 1;         
       p_model->baud.addr   = 4;
-      p_model->baud.length = 1;               
+      p_model->baud.length = 1;      
+      p_model->baud_type = M_BAUD_TYPE_1;         
       break;
 
     default:
@@ -913,7 +1016,8 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
       p_model->id.addr   = 7;
       p_model->id.length = 1;         
       p_model->baud.addr   = 8;
-      p_model->baud.length = 1;                                     
+      p_model->baud.length = 1;    
+      p_model->baud_type = M_BAUD_TYPE_2;                                 
       break;          
   }
 }
