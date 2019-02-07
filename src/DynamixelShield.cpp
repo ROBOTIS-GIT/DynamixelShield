@@ -113,6 +113,7 @@ bool DynamixelShield::ping(uint8_t id)
   dxl_error_t dxl_err;    
   uint8_t i;
   uint8_t id_i;
+  uint8_t dxl_cnt;
 
 
   if (id == DXL_GLOBAL_ID)
@@ -120,8 +121,9 @@ bool DynamixelShield::ping(uint8_t id)
     dxl_info.id_count = 0;
 
     dxl_err = dxlcmdPing(&dxl_cmd, DXL_GLOBAL_ID, &resp.ping, 500);  
-
-    for (i=0; i<resp.ping.id_count; i++)
+    dxl_cnt = resp.ping.id_count;
+    
+    for (i=0; i<dxl_cnt; i++)
     {
       id_i = resp.ping.p_node[i]->id;
       dxl_err = dxlcmdPing(&dxl_cmd, id_i, &resp.ping, 10);  
