@@ -4,12 +4,12 @@ DynamixelShield dxl;
 
 void setup() {
   // put your setup code here, to run once:  
-  uint32_t baud_tbl[5] = { 9600, 57600, 115200, 1000000, 2000000 };
+  uint32_t baud_tbl[6] = { 9600, 57141, 57600, 115200, 1000000, 2000000 };
   
   dxl.begin(1000000, DXL_PACKET_VER_2_0);
 
   dxl.println("DXL 1.0 Searching...");  
-  for (int i=0; i<5; i++)
+  for (int i=0; i<6; i++)
   {
     dxl.begin(baud_tbl[i], DXL_PACKET_VER_1_0);
     delay(100);
@@ -34,7 +34,7 @@ void setup() {
   }
 
   dxl.println("\r\nDXL 2.0 Searching...");  
-  for (int i=0; i<5; i++)
+  for (int i=0; i<6; i++)
   {
     dxl.begin(baud_tbl[i], DXL_PACKET_VER_2_0);
     delay(100);

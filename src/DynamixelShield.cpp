@@ -414,7 +414,7 @@ bool DynamixelShield::ledOn(uint8_t id)
   ret = getDxlModelFromID(id, &dxl_model);
 
   if (ret == true)
-  {    
+  {
     data = 1;
     ret = write(id, dxl_model.led.addr, (uint8_t *)&data, dxl_model.led.length, 100);
   }
@@ -930,6 +930,8 @@ void DynamixelShield::getDxlModel(uint8_t model_index, dxl_model_t *p_model)
   switch(model_index)
   {
     case M_AX:
+    case M_EX:
+    case M_MX:
       p_model->protocol = DXL_PACKET_VER_1_0;
       p_model->goal_pos.addr   = 30;
       p_model->goal_pos.length = 2;
