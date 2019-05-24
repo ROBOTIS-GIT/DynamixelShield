@@ -58,45 +58,48 @@
 
 #define PACKET_LENGTH 		6
 
-class RC100 {
- public:
-   RC100(uint8_t rx_pin=7, uint8_t tx_pin=8);
-   virtual ~RC100();
+class RobotisRemoteController {
+  public:
+    RobotisRemoteController(uint8_t rx_pin=7, uint8_t tx_pin=8);
+    virtual ~RobotisRemoteController();
 
-   void begin();
-   int available(void);   
-   uint16_t readData(void);
+    void begin();
+    int available(void);   
+    uint16_t readData(void);
 
-   bool availableEvent(void);
-   uint16_t readEvent(void);
+    bool availableEvent(void);
+    uint16_t readEvent(void);
 
-   int writeData(int data);
-   void writeRaw(uint8_t temp);
-   uint8_t readRaw(void);
+    int writeData(int data);
+    void writeRaw(uint8_t temp);
+    uint8_t readRaw(void);
 
-   void clear(void);
-   void flush(void);
+    void clear(void);
+    void flush(void);
+
+
+   
+  private:
+    typedef struct
+    {
+      uint8_t  state;
+      uint8_t  index;
+      bool     received;
+      bool     released_event;
+      uint16_t data;
+      uint16_t event_msg;
+    } rc100_t;
+
+    rc100_t rc100_rx;
 
 #ifdef SoftwareSerial_h
-   SoftwareSerial *p_serial;
+    SoftwareSerial *p_sw_port;
 #endif
-   
- private:
-   typedef struct
-   {
-     uint8_t  state;
-     uint8_t  index;
-     bool     received;
-     bool     released_event;
-     uint16_t data;
-     uint16_t event_msg;
-   } rc100_t;
-   rc100_t rc100_rx;
+    HardwareSerial *p_hw_port;
 
-  
 
-  bool rc100Update(uint8_t data);
-  bool rc100Receive(unsigned char *pPacket, int numPacket);
+    bool rc100Update(uint8_t data);
+    bool rc100Receive(unsigned char *pPacket, int numPacket);
 };
 
 #endif /* RC100_H_ */
