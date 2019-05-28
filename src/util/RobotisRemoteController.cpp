@@ -37,6 +37,10 @@
 
 #include "RobotisRemoteController.h"
 
+#ifndef SoftwareSerial_h
+#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
+#endif
+
 
 RobotisRemoteController::RobotisRemoteController(uint8_t rx_pin, uint8_t tx_pin)
   : p_sw_port(nullptr), p_hw_port(nullptr)

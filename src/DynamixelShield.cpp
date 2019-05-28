@@ -14,17 +14,8 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* 
- * Authors: Hancheol Cho (Baram) 
- *          KyungWan Ki  (Kei)
- */
 
 #include "DynamixelShield.h"
-
-
-#ifndef SoftwareSerial_h
-#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
-#endif
 
 
 

@@ -14,12 +14,6 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* 
- * Version: 0.0.4
- * Authors: Hancheol Cho (Baram) 
- *          KyungWan Ki  (Kei)
- */
-
 #ifndef DYNAMIXEL_SHIELD_H_
 #define DYNAMIXEL_SHIELD_H_
 
