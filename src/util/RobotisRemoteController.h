@@ -74,8 +74,7 @@ class RobotisRemoteController {
     void writeRaw(uint8_t temp);
     uint8_t readRaw(void);
 
-    void clear(void);
-    void flush(void);
+    void flushRx(void);
 
 
    
@@ -90,7 +89,7 @@ class RobotisRemoteController {
       uint16_t event_msg;
     } rc100_t;
 
-    rc100_t rc100_rx;
+    rc100_t rc100_rx_;
 
 #ifdef SoftwareSerial_h
     SoftwareSerial *p_sw_port;

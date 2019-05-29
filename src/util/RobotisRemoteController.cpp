@@ -48,13 +48,13 @@ RobotisRemoteController::RobotisRemoteController(uint8_t rx_pin, uint8_t tx_pin)
 #ifdef SoftwareSerial_h
   p_sw_port = new SoftwareSerial(rx_pin, tx_pin);
 #endif
-  memset(&rc100_rx, 0, sizeof(rc100_rx));
+  memset(&rc100_rx_, 0, sizeof(rc100_rx_));
 }
 
 // RobotisRemoteController::RobotisRemoteController(HardwareSerial& port)
 //   : p_hw_port(&port), p_sw_port(nullptr)
 // {
-//   memset(&rc100_rx, 0, sizeof(rc100_rx));
+//   memset(&rc100_rx_, 0, sizeof(rc100_rx_));
 // }
 
 RobotisRemoteController::~RobotisRemoteController()
@@ -66,27 +66,28 @@ void RobotisRemoteController::begin()
 #ifdef SoftwareSerial_h
   p_sw_port != nullptr ? p_sw_port->begin(57600) : (void)(p_sw_port);
 #endif  
-  rc100_rx.state = 0;
-  rc100_rx.index = 0;
-  rc100_rx.received = false;
-  rc100_rx.released_event = false;
+  rc100_rx_.state = 0;
+  rc100_rx_.index = 0;
+  rc100_rx_.received = false;
+  rc100_rx_.released_event = false;
 }
 
 int RobotisRemoteController::available(void)
 {
+  int ret = 0;
 #ifdef SoftwareSerial_h  
   if (p_sw_port != nullptr){
-    if(p_sw_port->available()){
-      return rc100Update(p_sw_port->read());
+    while(p_sw_port->available() > 0){
+      ret = rc100Update(p_sw_port->read());
     }
   }
 #endif
-  return 0;
+  return ret;
 }
 
 uint16_t RobotisRemoteController::readData(void)
 {
-  return rc100_rx.data;
+  return rc100_rx_.data;
 }
 
 void RobotisRemoteController::writeRaw(uint8_t temp)
@@ -109,14 +110,13 @@ bool RobotisRemoteController::availableEvent(void)
 {
   bool ret = false;
 
-  
-  rc100_rx.released_event = false;
+  rc100_rx_.released_event = false;
 
 #ifdef SoftwareSerial_h
   if (p_sw_port != nullptr){
-    if(p_sw_port->available()){
+    while(p_sw_port->available() > 0){
       rc100Update(p_sw_port->read());
-      ret = rc100_rx.released_event;
+      ret = rc100_rx_.released_event;
     }
   }  
 #endif
@@ -125,10 +125,10 @@ bool RobotisRemoteController::availableEvent(void)
 
 uint16_t RobotisRemoteController::readEvent(void)
 {
-  return rc100_rx.event_msg;
+  return rc100_rx_.event_msg;
 }
 
-void RobotisRemoteController::clear(void)
+void RobotisRemoteController::flushRx(void)
 {
 #ifdef SoftwareSerial_h  
   while(p_sw_port->available())
@@ -138,90 +138,85 @@ void RobotisRemoteController::clear(void)
 #endif
 }
 
-void RobotisRemoteController::flush(void)
-{
-  clear();
-}
-
 bool RobotisRemoteController::rc100Update(uint8_t data)
 {
   bool ret = false;
   static uint8_t save_data;
   static uint8_t inv_data;
-  static uint32_t time_t;
+  static uint32_t pre_time;
 
   inv_data = ~data;
 
-  if (millis()-time_t > 100)
+  if (millis()-pre_time > 100)
   {
-    rc100_rx.state = 0;
+    rc100_rx_.state = 0;
   }
 
-  switch(rc100_rx.state)
+  switch(rc100_rx_.state)
   {
     case 0:
       if (data == 0xFF)
       {
-        rc100_rx.state = 1;
-        time_t = millis();
+        pre_time = millis();
+        rc100_rx_.state = 1;
       }
       break;
 
     case 1:
       if (data == 0x55)
       {
-        rc100_rx.state    = 2;
-        rc100_rx.received = false;
-        rc100_rx.data     = 0;
+        rc100_rx_.state    = 2;
+        rc100_rx_.received = false;
+        rc100_rx_.data     = 0;
       }
       else
       {
-        rc100_rx.state = 0;
+        rc100_rx_.state = 0;
       }
       break;
 
     case 2:
-      rc100_rx.data  = data;
+      rc100_rx_.data  = data;
       save_data      = data;
-      rc100_rx.state = 3;
+      rc100_rx_.state = 3;
       break;
 
     case 3:
       if (save_data == inv_data)
       {
-        rc100_rx.state = 4;
+        rc100_rx_.state = 4;
       }
       else
       {
-        rc100_rx.state = 0;
+        rc100_rx_.state = 0;
       }
       break;
 
     case 4:
-      rc100_rx.data |= data<<8;
+      rc100_rx_.data |= data<<8;
       save_data      = data;
-      rc100_rx.state = 5;
+      rc100_rx_.state = 5;
       break;
 
     case 5:
       if (save_data == inv_data)
       {
-        if (rc100_rx.data > 0)
+        if (rc100_rx_.data > 0)
         {
-          rc100_rx.event_msg = rc100_rx.data;
+          rc100_rx_.event_msg = rc100_rx_.data;
         }
         else
         {
-          rc100_rx.released_event = true;
+          rc100_rx_.released_event = true;
         }
-        rc100_rx.received = true;
+        rc100_rx_.received = true;
         ret = true;
       }
-      rc100_rx.state = 0;
+      rc100_rx_.state = 0;
       break;
 
     default:
-      rc100_rx.state = 0;
+      rc100_rx_.state = 0;
       break;
   }
 
