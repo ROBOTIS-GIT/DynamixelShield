@@ -64,8 +64,8 @@ if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
 # Download Dynamixel2Arduino instead of Library Manager
 wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dynamixel2Arduino.zip
-unzip Dynamixel2Arduino.zip -d Dynamixel2Arduino
-mv Dynamixel2Arduino $HOME/arduino_ide/libraries/Dynamixel2Arduino
+unzip Dynamixel2Arduino.zip
+mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
 
 # set the maximal compiler warning level
 echo -n "SET BUILD PREFERENCES: "
