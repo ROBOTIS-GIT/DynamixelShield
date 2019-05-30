@@ -14,7 +14,11 @@
 
 #include <DynamixelShield.h>
 
+#ifdef SoftwareSerial_h
 RobotisRemoteController rc100;
+#else
+RobotisRemoteController rc100(Serial1);
+#endif
   
 void setup() {
   // put your setup code here, to run once:

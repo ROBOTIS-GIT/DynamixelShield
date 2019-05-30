@@ -60,17 +60,88 @@
 
 class RobotisRemoteController : public Stream{
   public:
+#ifdef SoftwareSerial_h  
     RobotisRemoteController(uint8_t rx_pin=7, uint8_t tx_pin=8);
+#endif    
+    RobotisRemoteController(HardwareSerial& port);
     virtual ~RobotisRemoteController();
 
-    void begin();
+    /**
+     * @brief Initialization function to start communication with RC.
+     *      Or change baudrate of baud serial port.
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * rc.begin(115200);
+     * @endcode
+     * @param baud The port speed you want on the board (the speed to communicate with RC) (default : 57600)
+     */    
+    void begin(uint32_t baudrate = 57600);
 
+    /**
+     * @brief Check whether there is an RC packet normally received.
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * if(rc.availableData()){
+     *   Serial.println(rc.readData());
+     * }
+     * @endcode
+     * @return True(1) if it exists, false(0) otherwise.
+     */    
     bool availableData(void);
+
+    /**
+     * @brief Read data of RC packet.
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * if(rc.availableData()){
+     *   Serial.println(rc.readData());
+     * }
+     * @endcode
+     * @return data of RC packet.
+     */    
     uint16_t readData(void);
 
+    /**
+     * @brief Check whether there is an RC packet normally received.
+     *       However, this only works after receiving the release event packet (data: 0).
+     *       That is, it checks whether there is a packet when the button is released and then pressed again on the RC100 controller.
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * if(rc.availableEvent()){
+     *   Serial.println(rc.readEvent());
+     * }
+     * @endcode
+     * @return True(1) if it exists, false(0) otherwise.
+     */   
     bool availableEvent(void);
+
+    /**
+     * @brief Read data of RC packet. (Use with availableEvent() function)
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * if(rc.availableEvent()){
+     *   Serial.println(rc.readEvent());
+     * }
+     * @endcode
+     * @return data of RC packet.
+     */        
     uint16_t readEvent(void);
 
+    /**
+     * @brief Initialization function to start communication with RC.
+     *      Or change baudrate of baud serial port.
+     * @code
+     * RobotisRemoteController rc;
+     * rc.begin();
+     * rc.flushRx();
+     * @endcode
+     * @param baud The port speed you want on the board (the speed to communicate with RC) (default : 57600)
+     */
     void flushRx(void);
 
     // Stream
@@ -98,10 +169,12 @@ class RobotisRemoteController : public Stream{
     rc100_t rc100_rx_;
 
 #ifdef SoftwareSerial_h
-    SoftwareSerial *p_sw_port;
+    SoftwareSerial *p_sw_port_;
 #endif
-    HardwareSerial *p_hw_port;
+    HardwareSerial *p_hw_port_;
+    Stream *stream_port_;
 
+    bool enable_hw_port_;
 
     bool rc100Update(uint8_t data);
     bool rc100Receive(unsigned char *pPacket, int numPacket);

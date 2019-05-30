@@ -37,52 +37,63 @@
 
 #include "RobotisRemoteController.h"
 
-#ifndef SoftwareSerial_h
-#pragma message("\r\nWarning : You can't use the RC100 function, because this board doesn't have SoftwareSerial.h")
-#endif
-
+#ifdef SoftwareSerial_h
+#pragma message("\r\nWarning : You CAN NOT use SoftwareSerial version of the RobotisRemoteController function(only HardwareSerial version enabled), because this board DOES NOT SUPPORT SoftwareSerial.h")
+#pragma message("\r\nWarning : Please use RobotisRemoteController(HardwareSerial&) constructor only. (eg. RobotisRemoteController rc(Serial1);")
 
 RobotisRemoteController::RobotisRemoteController(uint8_t rx_pin, uint8_t tx_pin)
-  : p_sw_port(nullptr), p_hw_port(nullptr)
+  : p_hw_port_(nullptr), stream_port_(nullptr), enable_hw_port_(false)
 {
-#ifdef SoftwareSerial_h
-  p_sw_port = new SoftwareSerial(rx_pin, tx_pin);
-#endif
+  p_sw_port_ = new SoftwareSerial(rx_pin, tx_pin);
+  stream_port_ = (Stream*) p_sw_port_;
+
   memset(&rc100_rx_, 0, sizeof(rc100_rx_));
 }
+#endif
 
-// RobotisRemoteController::RobotisRemoteController(HardwareSerial& port)
-//   : p_hw_port(&port), p_sw_port(nullptr)
-// {
-//   memset(&rc100_rx_, 0, sizeof(rc100_rx_));
-// }
+RobotisRemoteController::RobotisRemoteController(HardwareSerial& port)
+  : p_hw_port_(&port), stream_port_(nullptr), enable_hw_port_(true)
+{
+#ifdef SoftwareSerial_h
+  p_sw_port_ = nullptr;
+#endif
+  stream_port_ = (Stream*) p_hw_port_;
+  memset(&rc100_rx_, 0, sizeof(rc100_rx_));
+  begin();
+}
 
 RobotisRemoteController::~RobotisRemoteController()
 {
 }
 
-void RobotisRemoteController::begin()
+void RobotisRemoteController::begin(uint32_t baudrate)
 {
-#ifdef SoftwareSerial_h
-  p_sw_port != nullptr ? p_sw_port->begin(57600) : (void)(p_sw_port);
-#endif  
   rc100_rx_.state = 0;
   rc100_rx_.index = 0;
   rc100_rx_.received = false;
   rc100_rx_.released_event = false;
+
+  if(enable_hw_port_){
+    p_hw_port_ != nullptr ? p_hw_port_->begin(baudrate) : (void)(p_hw_port_);
+  }else{
+#ifdef SoftwareSerial_h
+    p_sw_port_ != nullptr ? p_sw_port_->begin(baudrate) : (void)(p_sw_port_);
+#endif  
+  }
 }
 
 bool RobotisRemoteController::availableData(void)
 {
   bool ret = false;
 
-#ifdef SoftwareSerial_h
-  if (p_sw_port != nullptr){
-    while(p_sw_port->available() > 0){
-      ret = rc100Update(p_sw_port->read());
-    }
-  }  
-#endif
+  if (stream_port_ == nullptr)
+    return false;
+
+  while(stream_port_->available() > 0)
+  {
+    ret = rc100Update(stream_port_->read());
+  }
+
   return ret;
 }
 
@@ -93,19 +104,17 @@ uint16_t RobotisRemoteController::readData(void)
 
 bool RobotisRemoteController::availableEvent(void)
 {
-  bool ret = false;
-
   rc100_rx_.released_event = false;
 
-#ifdef SoftwareSerial_h
-  if (p_sw_port != nullptr){
-    while(p_sw_port->available() > 0){
-      rc100Update(p_sw_port->read());
-      ret = rc100_rx_.released_event;
-    }
-  }  
-#endif
-  return ret;
+  if (stream_port_ == nullptr)
+    return false;
+
+  while(stream_port_->available() > 0)
+  {
+    rc100Update(stream_port_->read());
+  }
+  
+  return rc100_rx_.released_event;
 }
 
 uint16_t RobotisRemoteController::readEvent(void)
@@ -115,52 +124,54 @@ uint16_t RobotisRemoteController::readEvent(void)
 
 void RobotisRemoteController::flushRx(void)
 {
-#ifdef SoftwareSerial_h  
-  while(p_sw_port->available())
+  if (stream_port_ == nullptr)
+    return;
+
+  while(stream_port_->available())
   {
-    p_sw_port->read();
+    stream_port_->read();
   }  
-#endif
 }
 
 int RobotisRemoteController::available()
 {
-#ifdef SoftwareSerial_h
-  return p_sw_port->available();
-#endif
+  if (stream_port_ == nullptr)
+    return 0;
+
+  return stream_port_->available();
 }
 
 int RobotisRemoteController::peek()
 {
-#ifdef SoftwareSerial_h
-  return p_sw_port->peek();
-#endif
+  if (stream_port_ == nullptr)
+    return -1;
+
+  return stream_port_->peek();
 }
 
 void RobotisRemoteController::flush()
 {
-#ifdef SoftwareSerial_h
-  p_sw_port->flush();
-#endif
+  if (stream_port_ == nullptr)
+    return;
+
+  stream_port_->flush();
 }
 
 int RobotisRemoteController::read()
 {
-#ifdef SoftwareSerial_h
-  return p_sw_port->read();
-#endif
+  if (stream_port_ == nullptr)
+    return -1;
+
+  return stream_port_->read();
 }
 
 size_t RobotisRemoteController::write(uint8_t data)
 {
-#ifdef SoftwareSerial_h
-  return p_sw_port->write(data);
-#endif
+  if (stream_port_ == nullptr)
+    return 0;
+
+  return stream_port_->write(data);
 }
-
-
-
-
 
 
 
