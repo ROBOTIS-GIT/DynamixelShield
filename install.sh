@@ -52,6 +52,12 @@ echo -n "INSTALL OpenCR: "
 DEPENDENCY_OUTPUT=$(arduino --install-boards OpenCR:OpenCR 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
+
+# Download Dynamixel2Arduino instead of Library Manager
+wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dynamixel2Arduino.zip
+unzip Dynamixel2Arduino.zip
+mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
+
 # install random lib so the arduino IDE grabs a new library index
 # see: https://github.com/arduino/Arduino/issues/3535
 echo -n "UPDATE LIBRARY INDEX: "
@@ -61,11 +67,6 @@ if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 #echo -n "INSTALL Dynamixel2Arduino LIBRARY: "
 #DEPENDENCY_OUTPUT=$(arduino --install-library Dynamixel2Arduino > /dev/null 2>&1)
 #if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
-
-# Download Dynamixel2Arduino instead of Library Manager
-wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dynamixel2Arduino.zip
-unzip Dynamixel2Arduino.zip
-mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
 
 # set the maximal compiler warning level
 echo -n "SET BUILD PREFERENCES: "
