@@ -133,14 +133,12 @@ class RobotisRemoteController : public Stream{
     uint16_t readEvent(void);
 
     /**
-     * @brief Initialization function to start communication with RC.
-     *      Or change baudrate of baud serial port.
+     * @brief Clear Serial RX buffer.
      * @code
      * RobotisRemoteController rc;
      * rc.begin();
      * rc.flushRx();
      * @endcode
-     * @param baud The port speed you want on the board (the speed to communicate with RC) (default : 57600)
      */
     void flushRx(void);
 
