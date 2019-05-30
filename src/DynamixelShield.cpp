@@ -27,3 +27,57 @@ DynamixelShield::~DynamixelShield()
 {}
 
 
+
+
+
+
+
+  /* deprecated functions(Will be removed later) */
+  
+  //recommended alternative function : bool setBaudrate(uint8_t id, uint32_t baudrate);
+  bool DynamixelShield::setBaud(uint8_t id, uint32_t new_baud)
+  {
+    return setBaudrate(id, new_baud);
+  }
+
+  //recommended alternative function : bool setOperatingMode(uint8_t id, uint8_t mode);
+  bool DynamixelShield::setJointMode(uint8_t id)
+  {
+    return setOperatingMode(id, OP_POSITION);
+  }
+
+  //recommended alternative function : bool setOperatingMode(uint8_t id, uint8_t mode);
+  bool DynamixelShield::setWheelMode(uint8_t id)
+  {
+    return setOperatingMode(id, OP_VELOCITY);
+  }
+
+  //recommended alternative function : float getPresentPosition(uint8_t id, uint8_t unit = UNIT_RAW); 
+  int32_t DynamixelShield::getCurPosition(uint8_t id)
+  {
+    return (int32_t)getPresentPosition(id);
+  }
+
+  //recommended alternative function : bool setGoalVelocity(uint8_t id, float value, uint8_t unit = UNIT_RAW);
+  bool DynamixelShield::setGoalSpeed(uint8_t id, int32_t speed)
+  { 
+    return setGoalVelocity(id, (float)speed);
+  }
+
+  //recommended alternative function : float getPresentVelocity(uint8_t id, uint8_t unit = UNIT_RAW);  
+  int32_t DynamixelShield::getCurSpeed(uint8_t id)
+  {
+    return (int32_t)getPresentVelocity(id);
+  }
+
+  //recommended alternative function : bool setGoalPosition(uint8_t id, float value, UNIT_DEGREE);
+  bool DynamixelShield::setGoalAngle(uint8_t id, int32_t angle)
+  {
+    return setGoalPosition(id, (float)angle, UNIT_DEGREE);
+  }
+
+  //recommended alternative function : float getPresentPosition(uint8_t id, UNIT_DEGREE);  
+  int32_t DynamixelShield::getCurAngle(uint8_t id)
+  {
+    return (int32_t)getPresentPosition(id, UNIT_DEGREE);
+  }

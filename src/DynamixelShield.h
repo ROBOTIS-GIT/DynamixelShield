@@ -33,9 +33,38 @@ const int DIR_PIN = 2;
 
 class DynamixelShield : public Dynamixel2Arduino
 {
+//Most of the public functions of this class inherit the API of Dynamixel2Arduino.
+//So, if you want to modify or view the code, please refer to the code in the Dynamixel2Arduino library. 
 public:
   DynamixelShield(HardwareSerial& port = DXL_SERIAL, int dir_pin = DIR_PIN);
   ~DynamixelShield();
+
+
+  /* Below are deprecated functions(Will be removed later) */
+
+  //recommended alternative function : bool setBaudrate(uint8_t id, uint32_t baudrate);
+  bool setBaud(uint8_t id, uint32_t new_baud); 
+
+  //recommended alternative function : bool setOperatingMode(uint8_t id, uint8_t mode);
+  bool setJointMode(uint8_t id);
+
+  //recommended alternative function : bool setOperatingMode(uint8_t id, uint8_t mode);
+  bool setWheelMode(uint8_t id);
+
+  //recommended alternative function : float getPresentPosition(uint8_t id, uint8_t unit = UNIT_RAW); 
+  int32_t getCurPosition(uint8_t id); 
+
+  //recommended alternative function : bool setGoalVelocity(uint8_t id, float value, uint8_t unit = UNIT_RAW);
+  bool setGoalSpeed(uint8_t id, int32_t speed); 
+
+  //recommended alternative function : float getPresentVelocity(uint8_t id, uint8_t unit = UNIT_RAW);  
+  int32_t getCurSpeed(uint8_t id); 
+
+  //bool setGoalPosition(uint8_t id, float value, UNIT_DEGREE);
+  bool setGoalAngle(uint8_t id, int32_t angle); 
+
+  //float getPresentPosition(uint8_t id, UNIT_DEGREE);  
+  int32_t getCurAngle(uint8_t id); 
 
 private:
 
