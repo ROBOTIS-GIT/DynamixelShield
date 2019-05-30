@@ -26,7 +26,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   uint16_t rc100_data;
 
-  if (rc100.available() > 0)
+  if (rc100.availableData() > 0)
   {
     rc100_data = rc100.readData();
     

@@ -2,7 +2,7 @@
 
 #ifdef ARDUINO_AVR_UNO
   #include <SoftwareSerial.h>
-  SoftwareSerial soft_serial(10, 11); //RX,TX
+  SoftwareSerial soft_serial(7, 8); //RX,TX
   #define DEBUG_SERIAL soft_serial
 #elif ARDUINO_AVR_MEGA2560
   #define DEBUG_SERIAL Serial1
@@ -16,6 +16,7 @@ DynamixelShield dxl;
 
 void setup() {
   // put your setup code here, to run once:
+  DEBUG_SERIAL.begin(115200);
   dxl.begin(1000000);
   dxl.setPortProtocolVersion(2.0);
   dxl.ping(DXL_ID);
@@ -38,9 +39,9 @@ void loop() {
   delay(1000);
 
   // using RATIO unit (-100.0 ~ 100.0)
-  dxl.setGoalPWM(DXL_ID, -40.8, UNIT_RATIO);
+  dxl.setGoalPWM(DXL_ID, -40.8, UNIT_PERCENT);
   delay(1000);
   DEBUG_SERIAL.print("Present PWM(ratio) : ");
-  DEBUG_SERIAL.println(dxl.getPresentPWM(DXL_ID, UNIT_RATIO));
+  DEBUG_SERIAL.println(dxl.getPresentPWM(DXL_ID, UNIT_PERCENT));
   delay(1000);
 }

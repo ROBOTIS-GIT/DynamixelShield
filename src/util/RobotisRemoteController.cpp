@@ -72,15 +72,16 @@ void RobotisRemoteController::begin()
   rc100_rx_.released_event = false;
 }
 
-int RobotisRemoteController::available(void)
+bool RobotisRemoteController::availableData(void)
 {
-  int ret = 0;
-#ifdef SoftwareSerial_h  
+  bool ret = false;
+
+#ifdef SoftwareSerial_h
   if (p_sw_port != nullptr){
     while(p_sw_port->available() > 0){
       ret = rc100Update(p_sw_port->read());
     }
-  }
+  }  
 #endif
   return ret;
 }
@@ -88,22 +89,6 @@ int RobotisRemoteController::available(void)
 uint16_t RobotisRemoteController::readData(void)
 {
   return rc100_rx_.data;
-}
-
-void RobotisRemoteController::writeRaw(uint8_t temp)
-{
-#ifdef SoftwareSerial_h
-  p_sw_port != nullptr ? (void)p_sw_port->write(temp) : (void)(p_sw_port);
-#endif
-}
-
-uint8_t RobotisRemoteController::readRaw(void)
-{
-  uint8_t ret = 0;
-#ifdef SoftwareSerial_h  
-  ret = p_sw_port != nullptr ? p_sw_port->read() : 0;
-#endif  
-  return ret;
 }
 
 bool RobotisRemoteController::availableEvent(void)
@@ -137,6 +122,48 @@ void RobotisRemoteController::flushRx(void)
   }  
 #endif
 }
+
+int RobotisRemoteController::available()
+{
+#ifdef SoftwareSerial_h
+  return p_sw_port->available();
+#endif
+}
+
+int RobotisRemoteController::peek()
+{
+#ifdef SoftwareSerial_h
+  return p_sw_port->peek();
+#endif
+}
+
+void RobotisRemoteController::flush()
+{
+#ifdef SoftwareSerial_h
+  p_sw_port->flush();
+#endif
+}
+
+int RobotisRemoteController::read()
+{
+#ifdef SoftwareSerial_h
+  return p_sw_port->read();
+#endif
+}
+
+size_t RobotisRemoteController::write(uint8_t data)
+{
+#ifdef SoftwareSerial_h
+  return p_sw_port->write(data);
+#endif
+}
+
+
+
+
+
+
+
 
 bool RobotisRemoteController::rc100Update(uint8_t data)
 {

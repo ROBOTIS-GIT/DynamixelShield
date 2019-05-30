@@ -58,24 +58,30 @@
 
 #define PACKET_LENGTH 		6
 
-class RobotisRemoteController {
+class RobotisRemoteController : public Stream{
   public:
     RobotisRemoteController(uint8_t rx_pin=7, uint8_t tx_pin=8);
     virtual ~RobotisRemoteController();
 
     void begin();
-    int available(void);   
+
+    bool availableData(void);
     uint16_t readData(void);
 
     bool availableEvent(void);
     uint16_t readEvent(void);
 
-    int writeData(int data);
-    void writeRaw(uint8_t temp);
-    uint8_t readRaw(void);
-
     void flushRx(void);
 
+    // Stream
+    virtual int available() override;
+    virtual int read() override;
+    virtual int peek() override;
+    
+    // Print
+    virtual void flush() override;
+    virtual size_t write(uint8_t) override;
+    using Print::write; // pull in write(str) and write(buf, size) from Print
 
    
   private:
