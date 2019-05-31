@@ -15,10 +15,10 @@ export MAIN_PLATFORMS='declare -A main_platforms=([uno]="arduino:avr:uno" [mega2
 sleep 3
 export DISPLAY=:1.0
 
-# download and install arduino 1.8.5
-wget https://downloads.arduino.cc/arduino-1.8.5-linux64.tar.xz
-tar xf arduino-1.8.5-linux64.tar.xz
-mv arduino-1.8.5 $HOME/arduino_ide
+# download and install arduino IDE
+wget https://downloads.arduino.cc/arduino-1.8.8-linux64.tar.xz -O arduino_ide.tar.xz
+tar xf arduino_ide.tar.xz
+mv arduino-1.8.8 $HOME/arduino_ide
 
 # move this library to the arduino libraries folder
 ln -s $PWD $HOME/arduino_ide/libraries/DynamixelShield
@@ -56,6 +56,15 @@ if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 # see: https://github.com/arduino/Arduino/issues/3535
 echo -n "UPDATE LIBRARY INDEX: "
 DEPENDENCY_OUTPUT=$(arduino --install-library USBHost > /dev/null 2>&1)
+if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
+
+# Download Dynamixel2Arduino instead of Library Manager
+wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dynamixel2Arduino.zip
+unzip Dynamixel2Arduino.zip
+mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
+
+echo -n "INSTALL Dynamixel2Arduino LIBRARY: "
+DEPENDENCY_OUTPUT=$(arduino --install-library Dynamixel2Arduino > /dev/null 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
 # set the maximal compiler warning level
