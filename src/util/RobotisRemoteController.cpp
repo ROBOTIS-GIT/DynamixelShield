@@ -38,9 +38,6 @@
 #include "RobotisRemoteController.h"
 
 #ifdef SoftwareSerial_h
-#pragma message("\r\nWarning : You CAN NOT use SoftwareSerial version of the RobotisRemoteController function(only HardwareSerial version enabled), because this board DOES NOT SUPPORT SoftwareSerial.h")
-#pragma message("\r\nWarning : Please use RobotisRemoteController(HardwareSerial&) constructor only. (eg. RobotisRemoteController rc(Serial1);")
-
 RobotisRemoteController::RobotisRemoteController(uint8_t rx_pin, uint8_t tx_pin)
   : p_hw_port_(nullptr), stream_port_(nullptr), enable_hw_port_(false)
 {
@@ -49,6 +46,9 @@ RobotisRemoteController::RobotisRemoteController(uint8_t rx_pin, uint8_t tx_pin)
 
   memset(&rc100_rx_, 0, sizeof(rc100_rx_));
 }
+#else
+#pragma message("\r\nWarning : You CAN NOT use SoftwareSerial version of the RobotisRemoteController function(only HardwareSerial version enabled), because this board DOES NOT SUPPORT SoftwareSerial.h")
+#pragma message("\r\nWarning : Please use RobotisRemoteController(HardwareSerial&) constructor only. (eg. RobotisRemoteController rc(Serial1);")
 #endif
 
 RobotisRemoteController::RobotisRemoteController(HardwareSerial& port)
