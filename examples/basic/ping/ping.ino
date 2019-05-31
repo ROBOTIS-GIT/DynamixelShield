@@ -14,10 +14,6 @@
 * limitations under the License.
 *******************************************************************************/
 
-/*
-* Please refer to each DYNAMIXEL eManual(http://emanual.robotis.com/docs/en/dxl/) for more information regarding Torque.
-*/
-
 #include <DynamixelShield.h>
 
 #ifdef ARDUINO_AVR_UNO
@@ -49,13 +45,16 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+
   DEBUG_SERIAL.print("PROTOCOL ");
   DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
   DEBUG_SERIAL.print(", ID ");
   DEBUG_SERIAL.print(DXL_ID);
   DEBUG_SERIAL.print(": ");
   if(dxl.ping(DXL_ID) == true){
-    DEBUG_SERIAL.println("ping succeeded!");
+    DEBUG_SERIAL.print("ping succeeded!");
+    DEBUG_SERIAL.print(", Model Number: ");
+    DEBUG_SERIAL.println(dxl.getModelNumber(DXL_ID));
   }else{
     DEBUG_SERIAL.println("ping failed!");
   }

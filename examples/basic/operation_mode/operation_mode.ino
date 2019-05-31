@@ -14,6 +14,16 @@
 * limitations under the License.
 *******************************************************************************/
 
+/** Please refer to each DYNAMIXEL eManual(http://emanual.robotis.com) for supported Operating Mode
+ * Operating Mode
+ *  1. OP_POSITION                (Position Control Mode in protocol2.0, Joint Mode in protocol1.0)
+ *  2. OP_VELOCITY                (Velocity Control Mode in protocol2.0, Speed Mode in protocol1.0)
+ *  3. OP_PWM                     (PWM Control Mode in protocol2.0)
+ *  4. OP_EXTENDED_POSITION       (Extended Position Control Mode in protocol2.0, Multi-turn Mode(only MX series) in protocol1.0)
+ *  5. OP_CURRENT                 (Current Control Mode in protocol2.0, Torque Mode(only MX64,MX106) in protocol1.0)
+ *  6. OP_CURRENT_BASED_POSITION  (Current Based Postion Control Mode in protocol2.0 (except MX28, XL430))
+ */
+
 #include <DynamixelShield.h>
 
 #ifdef ARDUINO_AVR_UNO
@@ -25,16 +35,6 @@
 #else
   #define DEBUG_SERIAL Serial
 #endif
-
-/** Please refer to each DYNAMIXEL eManual(http://emanual.robotis.com) for supported Operating Mode
- * Operating Mode
- *  1. OP_POSITION                (Position Control Mode in protocol2.0, Joint Mode in protocol1.0)
- *  2. OP_VELOCITY                (Velocity Control Mode in protocol2.0, Speed Mode in protocol1.0)
- *  3. OP_PWM                     (PWM Control Mode in protocol2.0)
- *  4. OP_EXTENDED_POSITION       (Extended Position Control Mode in protocol2.0, Multi-turn Mode(only MX series) in protocol1.0)
- *  5. OP_CURRENT                 (Current Control Mode in protocol2.0, Torque Mode(only MX64,MX106) in protocol1.0)
- *  6. OP_CURRENT_BASED_POSITION  (Current Based Postion Control Mode in protocol2.0 (except MX28, XL430))
- */
 
 const uint8_t DXL_ID = 1;
 const float DXL_PROTOCOL_VERSION = 2.0;
@@ -59,7 +59,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   
   // Position Control Mode in protocol2.0, Joint Mode in protocol1.0
-  // Turn off torquen when configuring items in EEPROM area
+  // Turn off torque when configuring items in EEPROM area
   dxl.torqueOff(DXL_ID);
   dxl.setOperatingMode(DXL_ID, OP_POSITION);
   dxl.torqueOn(DXL_ID);

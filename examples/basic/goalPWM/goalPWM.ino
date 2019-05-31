@@ -44,7 +44,7 @@ void setup() {
   // Get DYNAMIXEL information
   dxl.ping(DXL_ID);
 
-  // Turn off torquen when configuring items in EEPROM area
+  // Turn off torque when configuring items in EEPROM area
   dxl.torqueOff(DXL_ID);
   dxl.setOperatingMode(DXL_ID, OP_PWM);
   dxl.torqueOn(DXL_ID);

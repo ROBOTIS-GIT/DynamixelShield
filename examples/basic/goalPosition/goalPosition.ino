@@ -16,13 +16,9 @@
 
 #include <DynamixelShield.h>
 
-#ifdef DYNAMIXEL_SHIELD_H_
+#ifdef ARDUINO_AVR_UNO
   #include <SoftwareSerial.h>
-  SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
-  #define DEBUG_SERIAL soft_serial
-#elif ARDUINO_AVR_UNO
-  #include <SoftwareSerial.h>
-  SoftwareSerial soft_serial(10, 11); //RX,TX
+  SoftwareSerial soft_serial(7, 8); //DYNAMIXEL Shield UART RX/TX
   #define DEBUG_SERIAL soft_serial
 #elif ARDUINO_AVR_MEGA2560
   #define DEBUG_SERIAL Serial1
@@ -48,7 +44,7 @@ void setup() {
   // Get DYNAMIXEL information
   dxl.ping(DXL_ID);
 
-  // Turn off torquen when configuring items in EEPROM area
+  // Turn off torque when configuring items in EEPROM area
   dxl.torqueOff(DXL_ID);
   dxl.setOperatingMode(DXL_ID, OP_POSITION);
   dxl.torqueOn(DXL_ID);

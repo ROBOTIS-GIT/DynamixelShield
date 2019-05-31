@@ -34,6 +34,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
   // Turn on the LED on DYNAMIXEL
   dxl.ledOn(DXL_ID);
   delay(500);
