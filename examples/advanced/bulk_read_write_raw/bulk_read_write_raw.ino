@@ -26,38 +26,7 @@
   #define DEBUG_SERIAL Serial
 #endif
 
-/* ParamForSyncReadInst_t
-  A structure that contains the information needed for the parameters of the 'syncRead packet'.
-
-  typedef struct ParamForSyncReadInst{
-    uint16_t addr;
-    uint16_t length;
-    uint8_t id_count;
-    InfoForSyncReadParam_t xel[DXL_MAX_NODE]; //refer to below.
-  } ParamForSyncReadInst_t;
-
-  typedef struct InfoForSyncReadParam{
-    uint8_t id;
-  } InfoForSyncReadParam_t;
-*/
-
-/* ParamForSyncWriteInst_t
-  A structure that contains the information needed for the parameters of the 'syncWrite packet'.
-
-  typedef struct ParamForSyncWriteInst{
-    uint16_t addr;
-    uint16_t length;
-    uint8_t id_count;
-    XelInfoForSyncWriteParam_t xel[DXL_MAX_NODE]; //refer to below.
-  } ParamForSyncWriteInst_t;
-
-  typedef struct XelInfoForSyncWriteParam{
-    uint8_t id;
-    uint8_t data[DXL_MAX_NODE_BUFFER_SIZE];
-  } XelInfoForSyncWriteParam_t;
-*/
-
-/* ParamForBulkReadInst_t
+/* XelInfoForBulkReadParam_t
   A structure that contains the information needed for the parameters of the 'bulkRead packet'.
 
   typedef struct ParamForBulkReadInst{
@@ -72,7 +41,7 @@
   } XelInfoForBulkReadParam_t;
 */
 
-/* ParamForBulkWriteInst_t
+/* XelInfoForBulkWriteParam_t
   A structure that contains the information needed for the parameters of the 'bulkWrite packet'.
 
   typedef struct ParamForBulkWriteInst{
@@ -104,8 +73,6 @@
   } XelInfoForStatusInst_t;
 */
 
-ParamForSyncReadInst_t sync_read_param;
-ParamForSyncWriteInst_t sync_write_param;
 ParamForBulkReadInst_t bulk_read_param;
 ParamForBulkWriteInst_t bulk_write_param;
 RecvInfoFromStatusInst_t read_result;
@@ -117,23 +84,7 @@ void setup() {
   DEBUG_SERIAL.begin(115200);
   dxl.begin(1000000);
   dxl.scan();
-
-  // fill the members of structure for syncWrite
-  sync_write_param.addr = 64; //Torque Enable on X serise
-  sync_write_param.length = 1;
-  sync_write_param.xel[0].id = 1;
-  sync_write_param.xel[1].id = 3;
-  sync_write_param.xel[0].data[0] = 0;
-  sync_write_param.xel[1].data[0] = 0;
-  sync_write_param.id_count = 2;
-
-  // fill the members of structure for syncRead
-  sync_read_param.addr = 126; //Present Current on X serise
-  sync_read_param.length = 2;
-  sync_read_param.xel[0].id = 1;
-  sync_read_param.xel[1].id = 3;
-  sync_read_param.id_count = 2;
-  
+ 
   // fill the members of structure for bulkWrite
   bulk_write_param.xel[0].id = 1;
   bulk_write_param.xel[1].id = 3;
@@ -152,65 +103,25 @@ void setup() {
   bulk_read_param.xel[1].length = 4;  
   bulk_read_param.id_count = 2;
 
-  // Torque Off
-  sync_write_param.xel[0].data[0] = 0;
-  sync_write_param.xel[1].data[0] = 0;
-  dxl.syncWrite(sync_write_param);
-  
-  // Set Operating Mode
-  sync_write_param.addr = 11; //Operating Mode on X serise
-  sync_write_param.xel[0].data[0] = 3;
-  sync_write_param.xel[1].data[0] = 1;  
-  dxl.syncWrite(sync_write_param);
+  dxl.torqueOff(1);
+  dxl.setOperatingMode(1, OP_POSITION);
+  dxl.torqueOn(1);
 
-  // Torque On
-  sync_write_param.addr = 64; //Torque Enable on X serise
-  sync_write_param.xel[0].data[0] = 1;
-  sync_write_param.xel[1].data[0] = 1;
-  dxl.syncWrite(sync_write_param);
-
-  sync_write_param.addr = 65; //LED on X serise
+  dxl.torqueOff(3);
+  dxl.setOperatingMode(3, OP_VELOCITY);
+  dxl.torqueOn(3);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  static bool led_state = false;
   static int32_t position = 0, velocity = 0;
   int32_t recv_position = 0, recv_velocity = 0;
-  int16_t present_current[2];
-
-  // set value to data buffer for syncWrite
-  led_state = led_state==true?false:true;
-  sync_write_param.xel[0].data[0] = led_state;
-  sync_write_param.xel[1].data[0] = led_state;
 
   // set value to data buffer for bulkWrite
   position = position >= 4095 ? 0 : position+409;
   memcpy(bulk_write_param.xel[0].data, &position, sizeof(position));
   velocity = velocity >= 200 ? -200 : velocity+10;
   memcpy(bulk_write_param.xel[1].data, &velocity, sizeof(velocity));
-
-  // send command using syncWrite
-  dxl.syncWrite(sync_write_param);
-  delay(100);
-
-  // Print the read data using SyncRead
-  dxl.syncRead(sync_read_param, read_result);
-  DEBUG_SERIAL.println("======= Sync Read =======");
-  memcpy(&present_current[0], read_result.xel[0].data, read_result.xel[0].length);
-  memcpy(&present_current[1], read_result.xel[1].data, read_result.xel[1].length);
-  DEBUG_SERIAL.print("ID: ");DEBUG_SERIAL.print(read_result.xel[0].id);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Present Current: ");DEBUG_SERIAL.print(present_current[0]);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Packet Error: ");DEBUG_SERIAL.print(read_result.xel[0].error);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Param Length: ");DEBUG_SERIAL.print(read_result.xel[0].length);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.println();
-  DEBUG_SERIAL.print("ID: ");DEBUG_SERIAL.print(read_result.xel[1].id);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Present Current: ");DEBUG_SERIAL.print(present_current[1]);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Packet Error: ");DEBUG_SERIAL.print(read_result.xel[1].error);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.print(", Param Length: ");DEBUG_SERIAL.print(read_result.xel[1].length);DEBUG_SERIAL.print(" ");
-  DEBUG_SERIAL.println();
-  DEBUG_SERIAL.println();  
-  delay(100);
 
   // send command using bulkWrite
   dxl.bulkWrite(bulk_write_param);
