@@ -14,6 +14,10 @@
 * limitations under the License.
 *******************************************************************************/
 
+/* NOTE: Please check if your DYNAMIXEL supports Current-based Position Control mode 
+* Supported Products : MX-64(2.0), MX-106(2.0), All X series(except XL-320, XL430-W250)
+*/
+
 #include <DynamixelShield.h>
 
 #ifdef ARDUINO_AVR_UNO
@@ -41,22 +45,37 @@ void setup() {
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+  // Get DYNAMIXEL information
+  dxl.ping(DXL_ID);
+
+  // Turn off torque when configuring items in EEPROM area
+  dxl.torqueOff(DXL_ID);
+  dxl.setOperatingMode(DXL_ID, OP_CURRENT_BASED_POSITION);
+  dxl.torqueOn(DXL_ID);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+   
+  // Set Goal Current using RAW value
+  dxl.setGoalCurrent(DXL_ID, 200);
+  dxl.setGoalPosition(DXL_ID, 350.0, UNIT_DEGREE);
 
-  DEBUG_SERIAL.print("PROTOCOL ");
-  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
-  DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true){
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Model Number: ");
-    DEBUG_SERIAL.println(dxl.getModelNumber(DXL_ID));
-  }else{
-    DEBUG_SERIAL.println("ping failed!");
-  }
+  // Print present current
   delay(500);
+  DEBUG_SERIAL.print("Present Current(raw) : ");
+  DEBUG_SERIAL.println(dxl.getPresentCurrent(DXL_ID));
+  
+  delay(5000);
+
+  // Set Goal Current 3.0% using percentage (-100.0 [%] ~ 100.0[%])
+  dxl.setGoalCurrent(DXL_ID, 3.0, UNIT_PERCENT);
+  dxl.setGoalPosition(DXL_ID, 0);
+
+  // Print present current in percentage
+  delay(500);
+  DEBUG_SERIAL.print("Present Current(ratio) : ");
+  DEBUG_SERIAL.println(dxl.getPresentCurrent(DXL_ID, UNIT_PERCENT));
+  
+  delay(5000);
 }

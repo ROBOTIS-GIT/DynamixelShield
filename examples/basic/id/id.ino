@@ -37,35 +37,36 @@ void setup() {
   // Use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);
   
-  // Set Port baudrate to 1Mbps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(1000000);
+  // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
+  dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
-  // Get DYNAMIXEL information
-  dxl.ping(DXL_ID);
 
-  // Turn off torque when configuring items in EEPROM area
-  dxl.torqueOff(DXL_ID);
-  dxl.setOperatingMode(DXL_ID, OP_PWM);
-  dxl.torqueOn(DXL_ID);
+  DEBUG_SERIAL.print("PROTOCOL ");
+  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
+  DEBUG_SERIAL.print(", ID ");
+  DEBUG_SERIAL.print(DXL_ID);
+  DEBUG_SERIAL.print(": ");
+  if(dxl.ping(DXL_ID) == true) {
+    DEBUG_SERIAL.print("ping succeeded!");
+    DEBUG_SERIAL.print(", Model Number: ");
+    DEBUG_SERIAL.println(dxl.getModelNumber(DXL_ID));
+    
+    // Turn off torque when configuring items in EEPROM area
+    dxl.torqueOff(DXL_ID);
+    
+    // set a new ID for DYNAMIXEL. Do not use ID 200
+    dxl.setID(DXL_ID, 100);
+    DEBUG_SERIAL.println("ID has been successfully changed to 100");
+
+    dxl.setID(100, DXL_ID);
+    DEBUG_SERIAL.println("ID has been successfully changed back to Original ID");
+  }
+  else{
+    DEBUG_SERIAL.println("ping failed!");
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-   
-  // Please refer to e-Manual(http://emanual.robotis.com) for available range of value. 
-  // Set Goal PWM using RAW unit
-  dxl.setGoalPWM(DXL_ID, 300);
-  delay(1000);
-  // Print present PWM
-  DEBUG_SERIAL.print("Present PWM(raw) : ");
-  DEBUG_SERIAL.println(dxl.getPresentPWM(DXL_ID));
-  delay(1000);
-
-  // Set Goal PWM using percentage (-100.0 [%] ~ 100.0 [%])
-  dxl.setGoalPWM(DXL_ID, -40.8, UNIT_PERCENT);
-  delay(1000);
-  DEBUG_SERIAL.print("Present PWM(ratio) : ");
-  DEBUG_SERIAL.println(dxl.getPresentPWM(DXL_ID, UNIT_PERCENT));
-  delay(1000);
 }

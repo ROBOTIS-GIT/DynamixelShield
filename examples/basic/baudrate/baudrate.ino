@@ -28,6 +28,8 @@
 
 const uint8_t DXL_ID = 1;
 const float DXL_PROTOCOL_VERSION = 2.0;
+uint32_t BAUDRATE = 57600;
+uint32_t NEW_BAUDRATE = 1000000; //1Mbsp
 
 DynamixelShield dxl;
 
@@ -38,25 +40,38 @@ void setup() {
   DEBUG_SERIAL.begin(115200);
   
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(57600);
+  dxl.begin(BAUDRATE);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
 
   DEBUG_SERIAL.print("PROTOCOL ");
   DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
   DEBUG_SERIAL.print(", ID ");
   DEBUG_SERIAL.print(DXL_ID);
   DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true){
+  if(dxl.ping(DXL_ID) == true) {
     DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Model Number: ");
-    DEBUG_SERIAL.println(dxl.getModelNumber(DXL_ID));
-  }else{
+    DEBUG_SERIAL.print(", Baudrate: ");
+    DEBUG_SERIAL.println(BAUDRATE);
+    
+    // Turn off torque when configuring items in EEPROM area
+    dxl.torqueOff(DXL_ID);
+    
+    // Set a new baudrate(1Mbps) for DYNAMIXEL
+    dxl.setBaudrate(DXL_ID, NEW_BAUDRATE);
+    DEBUG_SERIAL.println("Baudrate has been successfully changed to 1Mbps");
+
+    // Change to the new baudrate for communication.
+    dxl.begin(NEW_BAUDRATE);
+    // Change back to the initial baudrate
+    dxl.setBaudrate(DXL_ID, BAUDRATE);
+    DEBUG_SERIAL.println("Baudrate has been successfully changed back to initial baudrate");
+  }
+  else{
     DEBUG_SERIAL.println("ping failed!");
   }
-  delay(500);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
 }
