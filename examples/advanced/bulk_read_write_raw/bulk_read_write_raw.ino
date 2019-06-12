@@ -82,7 +82,7 @@ DynamixelShield dxl;
 void setup() {
   // put your setup code here, to run once:
   DEBUG_SERIAL.begin(115200);
-  dxl.begin(1000000);
+  dxl.begin(57600);
   dxl.scan();
  
   // fill the members of structure for bulkWrite

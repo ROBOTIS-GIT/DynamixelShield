@@ -41,22 +41,38 @@ void setup() {
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+  // Get DYNAMIXEL information
+  dxl.ping(DXL_ID);
+
+  // Turn off torque when configuring items in EEPROM area
+  dxl.torqueOff(DXL_ID);
+  dxl.setOperatingMode(DXL_ID, OP_CURRENT);
+  dxl.torqueOn(DXL_ID);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+   
+  // Please refer to e-Manual(http://emanual.robotis.com/docs/en/parts/interface/dynamixel_shield/) for available range of value. 
+  // Set Goal Current using RAW unit
+  dxl.setGoalCurrent(DXL_ID, 200);
+  delay(1000);
+  // Print present current
+  DEBUG_SERIAL.print("Present Current(raw) : ");
+  DEBUG_SERIAL.println(dxl.getPresentCurrent(DXL_ID));
+  delay(1000);
 
-  DEBUG_SERIAL.print("PROTOCOL ");
-  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
-  DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true){
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Model Number: ");
-    DEBUG_SERIAL.println(dxl.getModelNumber(DXL_ID));
-  }else{
-    DEBUG_SERIAL.println("ping failed!");
-  }
-  delay(500);
+  // Set Goal Current using mA unit
+  dxl.setGoalCurrent(DXL_ID, 25.8, UNIT_MILLI_AMPERE);
+  delay(1000);
+  DEBUG_SERIAL.print("Present Current(mA) : ");
+  DEBUG_SERIAL.println(dxl.getPresentCurrent(DXL_ID, UNIT_MILLI_AMPERE));
+  delay(1000);
+
+  // Set Goal Current using percentage (-100.0 [%] ~ 100.0[%])
+  dxl.setGoalCurrent(DXL_ID, -10.2, UNIT_PERCENT);
+  delay(1000);
+  DEBUG_SERIAL.print("Present Current(ratio) : ");
+  DEBUG_SERIAL.println(dxl.getPresentCurrent(DXL_ID, UNIT_PERCENT));
+  delay(1000);
 }
