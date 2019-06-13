@@ -21,6 +21,13 @@
 #include <Dynamixel2Arduino.h>
 #include "util/RobotisRemoteController.h"
 
+
+#ifndef DYNAMIXEL_2_ARDUINO_H_
+#error "\r\nWarning : To use DynamixelShield, you must install Dynamixel2Arduino library."
+#error "\r\nWarning : Please search and install Dynamixel2Arduino in Arduino Library Manager. (For version dependencies, see http://emanual.robotis.com/docs/en/parts/interface/dynamixel_shield/)"
+#endif
+
+
 #ifdef ARDUINO_AVR_UNO
   #define DXL_SERIAL   Serial
 #elif ARDUINO_AVR_MEGA2560
@@ -29,14 +36,14 @@
   #define DXL_SERIAL   Serial1
 #endif
 
-const int DIR_PIN = 2;
+const int DXL_DIR_PIN = 2;
 
 class DynamixelShield : public Dynamixel2Arduino
 {
 //Most of the public functions of this class inherit the API of Dynamixel2Arduino.
 //So, if you want to modify or view the code, please refer to the code in the Dynamixel2Arduino library. 
 public:
-  DynamixelShield(HardwareSerial& port = DXL_SERIAL, int dir_pin = DIR_PIN);
+  DynamixelShield(HardwareSerial& port = DXL_SERIAL, int dir_pin = DXL_DIR_PIN);
   ~DynamixelShield();
 
 
