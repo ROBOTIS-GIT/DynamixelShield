@@ -28,9 +28,7 @@
 #endif
 
 
-#ifdef ARDUINO_AVR_UNO
-  #define DXL_SERIAL   Serial
-#elif ARDUINO_AVR_MEGA2560
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560)
   #define DXL_SERIAL   Serial
 #else
   #define DXL_SERIAL   Serial1
