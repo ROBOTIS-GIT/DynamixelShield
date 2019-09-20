@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2019 ROBOTIS CO., LTD.
+* Copyright 2016 ROBOTIS CO., LTD.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 
 #include <DynamixelShield.h>
 
-#ifdef ARDUINO_AVR_UNO
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560)
   #include <SoftwareSerial.h>
-  SoftwareSerial soft_serial(7, 8); //DYNAMIXEL Shield UART RX/TX
+  SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
   #define DEBUG_SERIAL soft_serial
-#elif ARDUINO_AVR_MEGA2560
-  #define DEBUG_SERIAL Serial1
 #else
   #define DEBUG_SERIAL Serial
 #endif

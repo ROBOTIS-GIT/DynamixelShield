@@ -117,7 +117,7 @@
 
 #ifdef ARDUINO_AVR_UNO
   #include <SoftwareSerial.h>
-  SoftwareSerial soft_serial(7, 8); //RX,TX
+  SoftwareSerial soft_serial(7, 8); // DYNAMIXELShield UART RX/TX
   #define DEBUG_SERIAL soft_serial
 #elif ARDUINO_AVR_MEGA2560
   #define DEBUG_SERIAL Serial1
