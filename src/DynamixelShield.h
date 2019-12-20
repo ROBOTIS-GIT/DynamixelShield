@@ -28,7 +28,8 @@
 #endif
 
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560)
+// https://www.arduino.cc/reference/en/language/functions/communication/serial/
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_SAM_DUE)
   #define DXL_SERIAL   Serial
 #else
   #define DXL_SERIAL   Serial1
