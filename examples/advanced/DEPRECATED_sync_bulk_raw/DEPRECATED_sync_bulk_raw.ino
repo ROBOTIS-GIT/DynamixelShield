@@ -14,6 +14,10 @@
 * limitations under the License.
 *******************************************************************************/
 
+/*
+  This is an example deprecated. (Not recommended, just an example for legacy)
+*/
+
 #include <DynamixelShield.h>
 
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_MEGA2560)
@@ -122,7 +126,7 @@ void setup() {
   sync_write_param.addr = 64; //Torque Enable on X serise
   sync_write_param.length = 1;
   sync_write_param.xel[0].id = 1;
-  sync_write_param.xel[1].id = 3;
+  sync_write_param.xel[1].id = 2;
   sync_write_param.xel[0].data[0] = 0;
   sync_write_param.xel[1].data[0] = 0;
   sync_write_param.id_count = 2;
@@ -131,12 +135,12 @@ void setup() {
   sync_read_param.addr = 126; //Present Current on X serise
   sync_read_param.length = 2;
   sync_read_param.xel[0].id = 1;
-  sync_read_param.xel[1].id = 3;
+  sync_read_param.xel[1].id = 2;
   sync_read_param.id_count = 2;
   
   // fill the members of structure for bulkWrite
   bulk_write_param.xel[0].id = 1;
-  bulk_write_param.xel[1].id = 3;
+  bulk_write_param.xel[1].id = 2;
   bulk_write_param.xel[0].addr = 116; //Goal Position on X serise
   bulk_write_param.xel[1].addr = 104; //Goal Velocity on X serise
   bulk_write_param.xel[0].length = 4;
@@ -145,7 +149,7 @@ void setup() {
 
   // fill the members of structure for bulkRead
   bulk_read_param.xel[0].id = 1;
-  bulk_read_param.xel[1].id = 3;
+  bulk_read_param.xel[1].id = 2;
   bulk_read_param.xel[0].addr = 132; //Present Position on X serise
   bulk_read_param.xel[1].addr = 128; //Present Velocity on X serise
   bulk_read_param.xel[0].length = 4;
