@@ -35,12 +35,11 @@
   #define DXL_SERIAL   Serial1
 #endif
 
-#if defined(ARDUINO_SAMD_MKRZERO)
+#if defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_MBED)
   #define DXL_DIR_PIN		A6
 #else
   #define DXL_DIR_PIN		2
 #endif
-// const int DXL_DIR_PIN = 2;
 
 class DynamixelShield : public Dynamixel2Arduino
 {

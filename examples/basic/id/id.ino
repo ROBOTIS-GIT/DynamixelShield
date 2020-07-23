@@ -32,6 +32,9 @@ const float DXL_PROTOCOL_VERSION = 2.0;
 
 DynamixelShield dxl;
 
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
+
 void setup() {
   // put your setup code here, to run once:
   uint8_t present_id = DEFAULT_DXL_ID;
