@@ -36,9 +36,9 @@
 #endif
 
 #if defined(ARDUINO_SAMD_MKRZERO)
-#define DXL_DIR_PIN		A6
+  #define DXL_DIR_PIN		A6
 #else
-#define DXL_DIR_PIN		2
+  #define DXL_DIR_PIN		2
 #endif
 // const int DXL_DIR_PIN = 2;
 
