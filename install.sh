@@ -44,8 +44,12 @@ echo -n "INSTALL DUE(sam): "
 DEPENDENCY_OUTPUT=$(arduino --install-boards arduino:sam 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
-echo -n "INSTALL ZERO(samd): "
+echo -n "INSTALL MKR/ZERO(samd): "
 DEPENDENCY_OUTPUT=$(arduino --install-boards arduino:samd 2>&1)
+if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
+
+echo -n "INSTALL Portenta H7: "
+DEPENDENCY_OUTPUT=$(arduino --install-boards arduino-beta:mbed 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
 echo -n "INSTALL OpenCR: "
