@@ -26,51 +26,52 @@
   #define DEBUG_SERIAL Serial
 #endif
 
-const uint8_t DXL_ID = 1;
+#define TIMEOUT  10    //default communication timeout 10ms
+#define BROADCAST_ID  254
+#define MODEL_NUMBER_ADDR  0
+#define MODEL_NUMBER_LENGTH  2
+
+DYNAMIXEL::InfoFromPing_t recv_info[32];  //Set the maximum DYNAMIXEL in the network to 32
+
+uint16_t model_num = 0;
+uint8_t ret = 0;
+uint8_t recv_count = 0;
+
+const uint8_t DXL_ID = BROADCAST_ID;
 const float DXL_PROTOCOL_VERSION = 2.0;
-uint32_t BAUDRATE = 57600;
-uint32_t NEW_BAUDRATE = 1000000; //1Mbsp
 
 DynamixelShield dxl;
-
-//This namespace is required to use Control table item names
-using namespace ControlTableItem;
 
 void setup() {
   // put your setup code here, to run once:
   
   // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
-  DEBUG_SERIAL.begin(115200);
+  DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
+  while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(BAUDRATE);
+  dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
-  DEBUG_SERIAL.print("PROTOCOL ");
+  DEBUG_SERIAL.print("Ping for PROTOCOL ");
   DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
   DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true) {
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Baudrate: ");
-    DEBUG_SERIAL.println(BAUDRATE);
-    
-    // Turn off torque when configuring items in EEPROM area
-    dxl.torqueOff(DXL_ID);
-    
-    // Set a new baudrate(1Mbps) for DYNAMIXEL
-    dxl.setBaudrate(DXL_ID, NEW_BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed to 1Mbps");
+  DEBUG_SERIAL.println(DXL_ID);
 
-    // Change to the new baudrate for communication.
-    dxl.begin(NEW_BAUDRATE);
-    // Change back to the initial baudrate
-    dxl.setBaudrate(DXL_ID, BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed back to initial baudrate");
-  }
-  else{
+  ret = dxl.ping(DXL_ID, recv_info, sizeof(recv_info), sizeof(recv_info)*3);
+
+  if(ret > 0) {
+    while (recv_count < ret) {
+      DEBUG_SERIAL.print("DYNAMIXEL Detected!");
+      dxl.read(recv_info[recv_count].id, MODEL_NUMBER_ADDR, MODEL_NUMBER_LENGTH, (uint8_t*)&model_num, sizeof(model_num), TIMEOUT);
+      DEBUG_SERIAL.print(", ID: ");
+      DEBUG_SERIAL.print(recv_info[recv_count].id);
+      DEBUG_SERIAL.print(" Model Number: ");
+      DEBUG_SERIAL.println(model_num);
+      recv_count++;
+    }
+  } else {
     DEBUG_SERIAL.println("ping failed!");
   }
 }

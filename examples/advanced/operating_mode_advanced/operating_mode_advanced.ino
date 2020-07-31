@@ -30,6 +30,9 @@ const uint8_t DXL_ID = 1;
 
 DynamixelShield dxl;
 
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
+
 void setup() {
   // put your setup code here, to run once:
   DEBUG_SERIAL.begin(115200);

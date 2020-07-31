@@ -26,53 +26,58 @@
   #define DEBUG_SERIAL Serial
 #endif
 
+//Please see eManual Control Table section of your DYNAMIXEL.
+//This example is written based on DYNAMIXEL X series(excluding XL-320)
+#define ID_ADDR                 7
+#define ID_ADDR_LEN             1
+#define BAUDRATE_ADDR           8
+#define BAUDRATE_ADDR_LEN       1
+#define PROTOCOL_TYPE_ADDR      13
+#define PROTOCOL_TYPE_ADDR_LEN  1
+#define TIMEOUT 10    //default communication timeout 10ms
+
+uint8_t returned_id = 0;
+uint8_t returned_baudrate = 0;
+uint8_t returned_protocol = 0;
+
 const uint8_t DXL_ID = 1;
 const float DXL_PROTOCOL_VERSION = 2.0;
-uint32_t BAUDRATE = 57600;
-uint32_t NEW_BAUDRATE = 1000000; //1Mbsp
 
 DynamixelShield dxl;
-
-//This namespace is required to use Control table item names
-using namespace ControlTableItem;
 
 void setup() {
   // put your setup code here, to run once:
   
   // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
-  DEBUG_SERIAL.begin(115200);
+  DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
+  while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(BAUDRATE);
+  dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
-  DEBUG_SERIAL.print("PROTOCOL ");
+  DEBUG_SERIAL.println("Refer to eManual for more details.");
+  DEBUG_SERIAL.println("https://emanual.robotis.com/docs/en/dxl/");
+  DEBUG_SERIAL.print("Read for PROTOCOL ");
   DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
   DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true) {
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Baudrate: ");
-    DEBUG_SERIAL.println(BAUDRATE);
-    
-    // Turn off torque when configuring items in EEPROM area
-    dxl.torqueOff(DXL_ID);
-    
-    // Set a new baudrate(1Mbps) for DYNAMIXEL
-    dxl.setBaudrate(DXL_ID, NEW_BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed to 1Mbps");
-
-    // Change to the new baudrate for communication.
-    dxl.begin(NEW_BAUDRATE);
-    // Change back to the initial baudrate
-    dxl.setBaudrate(DXL_ID, BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed back to initial baudrate");
-  }
-  else{
-    DEBUG_SERIAL.println("ping failed!");
-  }
+  DEBUG_SERIAL.println(DXL_ID);
+  
+  // Read DYNAMIXEL ID
+  dxl.read(DXL_ID, ID_ADDR, ID_ADDR_LEN, (uint8_t*)&returned_id, sizeof(returned_id), TIMEOUT);
+  DEBUG_SERIAL.print("ID : ");
+  DEBUG_SERIAL.println(returned_id);
+  delay(100);
+  // Read DYNAMIXEL Baudrate
+  dxl.read(DXL_ID, BAUDRATE_ADDR, BAUDRATE_ADDR_LEN, (uint8_t*)&returned_baudrate, sizeof(returned_baudrate), TIMEOUT);
+  DEBUG_SERIAL.print("Baud Rate : ");
+  DEBUG_SERIAL.println(returned_baudrate);
+  delay(100);
+  // Read DYNAMIXEL Protocol type
+  dxl.read(DXL_ID, PROTOCOL_TYPE_ADDR, PROTOCOL_TYPE_ADDR_LEN, (uint8_t*)&returned_protocol, sizeof(returned_protocol), TIMEOUT);
+  DEBUG_SERIAL.print("Protocol Type : ");
+  DEBUG_SERIAL.println(returned_protocol);
 }
 
 void loop() {

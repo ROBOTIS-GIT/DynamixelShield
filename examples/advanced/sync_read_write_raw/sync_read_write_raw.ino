@@ -93,6 +93,9 @@ DYNAMIXEL::XELInfoSyncWrite_t info_xels_sw[DXL_ID_CNT];
 
 DynamixelShield dxl;
 
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
+
 void setup() {
   // put your setup code here, to run once:
   uint8_t i;

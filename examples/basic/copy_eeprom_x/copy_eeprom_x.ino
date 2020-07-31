@@ -27,7 +27,7 @@
 #endif
 
 #define MAX_BAUD  5
-const int32_t baud[MAX_BAUD] = {57600, 115200, 1000000, 2000000, 3000000};
+const uint32_t baud[MAX_BAUD] = {57600, 115200, 1000000, 2000000, 3000000};
 #define INVALID_ID 253
 
 struct DxlList
@@ -36,6 +36,9 @@ struct DxlList
   uint32_t dxl_baudrate;
   uint8_t dxl_protocol;
 };
+
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
 
 uint8_t itemList[] = {ID, BAUD_RATE, PROTOCOL_VERSION, MODEL_NUMBER, FIRMWARE_VERSION, RETURN_DELAY_TIME, DRIVE_MODE, OPERATING_MODE, SECONDARY_ID, HOMING_OFFSET, MOVING_THRESHOLD, TEMPERATURE_LIMIT, MAX_VOLTAGE_LIMIT, MIN_VOLTAGE_LIMIT, PWM_LIMIT, CURRENT_LIMIT, VELOCITY_LIMIT, MAX_POSITION_LIMIT, MIN_POSITION_LIMIT, SHUTDOWN};
 String itemListStr[] = {
@@ -72,7 +75,7 @@ Dynamixel2Arduino dxl(DXL_SERIAL, DXL_DIR_PIN);
 
 void setup() 
 {
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);   //set debugging port baudrate to 115200bps
   while(!DEBUG_SERIAL);         //Wait until the serial port is opened
 

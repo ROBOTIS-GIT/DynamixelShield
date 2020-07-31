@@ -26,55 +26,50 @@
   #define DEBUG_SERIAL Serial
 #endif
 
+#define TIMEOUT 10    //default communication timeout 10ms
 const uint8_t DXL_ID = 1;
 const float DXL_PROTOCOL_VERSION = 2.0;
-uint32_t BAUDRATE = 57600;
-uint32_t NEW_BAUDRATE = 1000000; //1Mbsp
+uint8_t option = 0;
 
 DynamixelShield dxl;
-
-//This namespace is required to use Control table item names
-using namespace ControlTableItem;
 
 void setup() {
   // put your setup code here, to run once:
   
   // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
-  DEBUG_SERIAL.begin(115200);
+  DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
+  while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(BAUDRATE);
+  dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
-
-  DEBUG_SERIAL.print("PROTOCOL ");
-  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
-  DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(": ");
-  if(dxl.ping(DXL_ID) == true) {
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Baudrate: ");
-    DEBUG_SERIAL.println(BAUDRATE);
-    
-    // Turn off torque when configuring items in EEPROM area
-    dxl.torqueOff(DXL_ID);
-    
-    // Set a new baudrate(1Mbps) for DYNAMIXEL
-    dxl.setBaudrate(DXL_ID, NEW_BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed to 1Mbps");
-
-    // Change to the new baudrate for communication.
-    dxl.begin(NEW_BAUDRATE);
-    // Change back to the initial baudrate
-    dxl.setBaudrate(DXL_ID, BAUDRATE);
-    DEBUG_SERIAL.println("Baudrate has been successfully changed back to initial baudrate");
-  }
-  else{
-    DEBUG_SERIAL.println("ping failed!");
-  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
+  bool ret = false;
+  DEBUG_SERIAL.println();
+  DEBUG_SERIAL.println("Reboot DYNAMIXEL? [y/n]");
+
+  DEBUG_SERIAL.read();
+  while(DEBUG_SERIAL.available()==0);
+  option = DEBUG_SERIAL.read();
+
+  switch(option) {
+    case 'y':
+    case 'Y':
+      ret = dxl.reboot(DXL_ID, TIMEOUT);
+      break;
+    default:
+      break;
+  }
+  if(ret) {
+    DEBUG_SERIAL.println("Reboot Succeeded!");
+  } else {
+    DEBUG_SERIAL.println("Reboot Failed!");
+  }
+
+  delay(1000);
 }

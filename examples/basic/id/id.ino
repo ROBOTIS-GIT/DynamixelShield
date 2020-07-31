@@ -32,12 +32,15 @@ const float DXL_PROTOCOL_VERSION = 2.0;
 
 DynamixelShield dxl;
 
+//This namespace is required to use Control table item names
+using namespace ControlTableItem;
+
 void setup() {
   // put your setup code here, to run once:
   uint8_t present_id = DEFAULT_DXL_ID;
   uint8_t new_id = 0;
   
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);
   while(!DEBUG_SERIAL);
   
