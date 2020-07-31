@@ -47,7 +47,7 @@ using namespace ControlTableItem;
 void setup() {
   // put your setup code here, to run once:
   
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);
   
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.

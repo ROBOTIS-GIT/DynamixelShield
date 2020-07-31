@@ -26,21 +26,26 @@
   #define DEBUG_SERIAL Serial
 #endif
 
-#define TIMEOUT 10    //default communication timeout 10ms
-const uint8_t DXL_ID = 1;
-const float DXL_PROTOCOL_VERSION = 2.0;
+#define TIMEOUT  10    //default communication timeout 10ms
+#define BROADCAST_ID  254
+#define MODEL_NUMBER_ADDR  0
+#define MODEL_NUMBER_LENGTH  2
 
-DYNAMIXEL::InfoFromPing_t recv_info;
-uint8_t recv_ids[254];
-uint16_t model_num = 0xFFFF;
-bool ret = false;
+DYNAMIXEL::InfoFromPing_t recv_info[32];  //Set the maximum DYNAMIXEL in the network to 32
+
+uint16_t model_num = 0;
+uint8_t ret = 0;
+uint8_t recv_count = 0;
+
+const uint8_t DXL_ID = BROADCAST_ID;
+const float DXL_PROTOCOL_VERSION = 2.0;
 
 DynamixelShield dxl;
 
 void setup() {
   // put your setup code here, to run once:
   
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
   while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
@@ -48,34 +53,29 @@ void setup() {
   dxl.begin(57600);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
+
+  DEBUG_SERIAL.print("Ping for PROTOCOL ");
+  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
+  DEBUG_SERIAL.print(", ID ");
+  DEBUG_SERIAL.println(DXL_ID);
+
+  ret = dxl.ping(DXL_ID, recv_info, sizeof(recv_info), sizeof(recv_info)*3);
+
+  if(ret > 0) {
+    while (recv_count < ret) {
+      DEBUG_SERIAL.print("DYNAMIXEL Detected!");
+      dxl.read(recv_info[recv_count].id, MODEL_NUMBER_ADDR, MODEL_NUMBER_LENGTH, (uint8_t*)&model_num, sizeof(model_num), TIMEOUT);
+      DEBUG_SERIAL.print(", ID: ");
+      DEBUG_SERIAL.print(recv_info[recv_count].id);
+      DEBUG_SERIAL.print(" Model Number: ");
+      DEBUG_SERIAL.println(model_num);
+      recv_count++;
+    }
+  } else {
+    DEBUG_SERIAL.println("ping failed!");
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  DEBUG_SERIAL.print("PROTOCOL ");
-  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
-  DEBUG_SERIAL.print(", ID ");
-  DEBUG_SERIAL.print(DXL_ID);
-  DEBUG_SERIAL.print(" : ");
-
-  if(DXL_ID != DXL_BROADCAST_ID){
-    if(dxl.ping(DXL_ID, &recv_info, 1, TIMEOUT) > 0)
-      ret = true;
-  }
-  else{
-    if(dxl.ping(DXL_ID, recv_ids, sizeof(recv_ids), 3*253) > 0)
-      ret = true;
-  }
-
-  if(ret == true){
-    DEBUG_SERIAL.print("ping succeeded!");
-    DEBUG_SERIAL.print(", Model Number: ");
-    dxl.read(DXL_ID, COMMON_MODEL_NUMBER_ADDR, COMMON_MODEL_NUMBER_ADDR_LENGTH, (uint8_t*)&model_num, sizeof(model_num), TIMEOUT);
-    DEBUG_SERIAL.println(model_num);
-  }
-  else
-    DEBUG_SERIAL.println("ping failed!");
-  
-  delay(1000);
 }

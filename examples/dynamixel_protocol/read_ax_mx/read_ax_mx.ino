@@ -26,27 +26,30 @@
   #define DEBUG_SERIAL Serial
 #endif
 
+//Please see eManual Control Table section of your DYNAMIXEL.
+//This example is written for DYNAMIXEL AX & MX series with Protocol 1.0.
+//For MX 2.0 with Protocol 2.0, refer to write_x.ino example.
+#define ID_ADDR                   3
+#define ID_ADDR_LEN               1
+#define BAUDRATE_ADDR             4
+#define BAUDRATE_ADDR_LEN         1
+#define PRESENT_POSITION_ADDR     36
+#define PRESENT_POSITION_ADDR_LEN  2
 #define TIMEOUT 10    //default communication timeout 10ms
-#define ID_ADDR                 7
-#define ID_ADDR_LEN             1
-#define BAUDRATE_ADDR           8
-#define BAUDRATE_ADDR_LEN       1
-#define PROTOCOL_TYPE_ADDR      13
-#define PROTOCOL_TYPE_ADDR_LEN  1
 
-int32_t ret = 0;
-uint8_t enable = 1;
-uint8_t disable = 0;
+uint8_t returned_id = 0;
+uint8_t returned_baudrate = 0;
+uint16_t present_position = 0;
 
 const uint8_t DXL_ID = 1;
-const float DXL_PROTOCOL_VERSION = 2.0;
+const float DXL_PROTOCOL_VERSION = 1.0;
 
 DynamixelShield dxl;
 
 void setup() {
   // put your setup code here, to run once:
   
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
   while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
@@ -55,21 +58,27 @@ void setup() {
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
 
+  DEBUG_SERIAL.println("Refer to eManual for more details.");
+  DEBUG_SERIAL.println("https://emanual.robotis.com/docs/en/dxl/");
+  DEBUG_SERIAL.print("Read for PROTOCOL ");
+  DEBUG_SERIAL.print(DXL_PROTOCOL_VERSION, 1);
+  DEBUG_SERIAL.print(", ID ");
+  DEBUG_SERIAL.println(DXL_ID);
+  
   // Read DYNAMIXEL ID
+  dxl.read(DXL_ID, ID_ADDR, ID_ADDR_LEN, (uint8_t*)&returned_id, sizeof(returned_id), TIMEOUT);
   DEBUG_SERIAL.print("ID : ");
-  dxl.read(DXL_ID, ID_ADDR, ID_ADDR_LEN, (uint8_t*)&ret, sizeof(ret), TIMEOUT);
-  DEBUG_SERIAL.println(ret);
-  delay(1000);
+  DEBUG_SERIAL.println(returned_id);
+  delay(100);
   // Read DYNAMIXEL Baudrate
+  dxl.read(DXL_ID, BAUDRATE_ADDR, BAUDRATE_ADDR_LEN, (uint8_t*)&returned_baudrate, sizeof(returned_baudrate), TIMEOUT);
   DEBUG_SERIAL.print("Baud Rate : ");
-  dxl.read(DXL_ID, BAUDRATE_ADDR, BAUDRATE_ADDR_LEN, (uint8_t*)&ret, sizeof(ret), TIMEOUT);
-  DEBUG_SERIAL.println(ret);
-  delay(1000);
-  // Read DYNAMIXEL Protocol type
-  DEBUG_SERIAL.print("Protocol Type : ");
-  dxl.read(DXL_ID, PROTOCOL_TYPE_ADDR, PROTOCOL_TYPE_ADDR_LEN, (uint8_t*)&ret, sizeof(ret), TIMEOUT);
-  DEBUG_SERIAL.println(ret);
-  delay(1000);
+  DEBUG_SERIAL.println(returned_baudrate);
+  delay(100);
+  // Read DYNAMIXEL Present Position
+  dxl.read(DXL_ID, PRESENT_POSITION_ADDR, PRESENT_POSITION_ADDR_LEN, (uint8_t*)&present_position, sizeof(present_position), TIMEOUT);
+  DEBUG_SERIAL.print("Present Position : ");
+  DEBUG_SERIAL.println(present_position);
 }
 
 void loop() {

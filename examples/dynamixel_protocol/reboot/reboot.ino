@@ -29,13 +29,14 @@
 #define TIMEOUT 10    //default communication timeout 10ms
 const uint8_t DXL_ID = 1;
 const float DXL_PROTOCOL_VERSION = 2.0;
+uint8_t option = 0;
 
 DynamixelShield dxl;
 
 void setup() {
   // put your setup code here, to run once:
   
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);   //Set debugging port baudrate to 115200bps
   while(!DEBUG_SERIAL);         //Wait until the serial port for terminal is opened
   
@@ -47,11 +48,28 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  if(dxl.reboot(DXL_ID, TIMEOUT))
-    DEBUG_SERIAL.println("reboot succeeded!");
-  else
-    DEBUG_SERIAL.println("reboot failed!");
   
-  delay(5000);
+  bool ret = false;
+  DEBUG_SERIAL.println();
+  DEBUG_SERIAL.println("Reboot DYNAMIXEL? [y/n]");
+
+  DEBUG_SERIAL.read();
+  while(DEBUG_SERIAL.available()==0);
+  option = DEBUG_SERIAL.read();
+
+  switch(option) {
+    case 'y':
+    case 'Y':
+      ret = dxl.reboot(DXL_ID, TIMEOUT);
+      break;
+    default:
+      break;
+  }
+  if(ret) {
+    DEBUG_SERIAL.println("Reboot Succeeded!");
+  } else {
+    DEBUG_SERIAL.println("Reboot Failed!");
+  }
+
+  delay(1000);
 }

@@ -39,7 +39,7 @@ void setup() {
   int8_t index = 0;
   int8_t found_dynamixel = 0;
 
-  // Use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
   DEBUG_SERIAL.begin(115200);   //set debugging port baudrate to 115200bps
   while(!DEBUG_SERIAL);         //Wait until the serial port is opened
     
