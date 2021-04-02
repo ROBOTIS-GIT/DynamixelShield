@@ -67,6 +67,12 @@ wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dyna
 unzip Dynamixel2Arduino.zip
 mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
 
+# Download 107-Arduino-MCP2515 library
+wget https://github.com/107-systems/107-Arduino-MCP2515/archive/master.zip -O 107-Arduino-MCP2515.zip
+unzip 107-Arduino-MCP2515.zip
+mv 107-Arduino-MCP2515-master $HOME/arduino_ide/libraries/107-Arduino-MCP2515
+
+
 #echo -n "INSTALL Dynamixel2Arduino LIBRARY: "
 #DEPENDENCY_OUTPUT=$(arduino --install-library Dynamixel2Arduino > /dev/null 2>&1)
 #if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
