@@ -20,9 +20,6 @@ wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz -O arduino_ide.t
 tar xf arduino_ide.tar.xz
 mv arduino-1.8.13 $HOME/arduino_ide
 
-# move this library to the arduino libraries folder
-ln -s $PWD $HOME/arduino_ide/libraries/DynamixelShield
-
 # add the arduino CLI to our PATH
 export PATH="$HOME/arduino_ide:$PATH"
 
@@ -62,6 +59,19 @@ echo -n "UPDATE LIBRARY INDEX: "
 DEPENDENCY_OUTPUT=$(arduino --install-library USBHost > /dev/null 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
+# Install DYNAMIXELShield package
+if [ $1 == "refs/heads/master" ]; then
+  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch master --single-branch
+elif [ $1 == "refs/heads/develop" ]; then
+  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch develop --single-branch
+else
+  echo -e "\xe2\x9c\x93";
+fi
+
+# Link library folder to the arduino libraries folder
+mv DynamixelShield $HOME/arduino_ide/libraries/DynamixelShield
+ln -s $PWD $HOME/arduino_ide/libraries/DynamixelShield
+
 # Download Dynamixel2Arduino instead of Library Manager
 wget https://github.com/ROBOTIS-GIT/Dynamixel2Arduino/archive/master.zip -O Dynamixel2Arduino.zip
 unzip Dynamixel2Arduino.zip
@@ -71,7 +81,6 @@ mv Dynamixel2Arduino-master $HOME/arduino_ide/libraries/Dynamixel2Arduino
 wget https://github.com/107-systems/107-Arduino-MCP2515/archive/master.zip -O 107-Arduino-MCP2515.zip
 unzip 107-Arduino-MCP2515.zip
 mv 107-Arduino-MCP2515-master $HOME/arduino_ide/libraries/107-Arduino-MCP2515
-
 
 #echo -n "INSTALL Dynamixel2Arduino LIBRARY: "
 #DEPENDENCY_OUTPUT=$(arduino --install-library Dynamixel2Arduino > /dev/null 2>&1)

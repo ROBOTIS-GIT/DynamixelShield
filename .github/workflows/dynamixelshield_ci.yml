@@ -1,0 +1,23 @@
+name: dynamixelshield_ci
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  dynamixelshield_ci:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Arduino CI Script
+        run: |
+          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.ref}}
+          build_platform opencr
+          build_platform uno
+          build_platform mega2560
+          build_platform mkrzero
+          build_platform portenta
