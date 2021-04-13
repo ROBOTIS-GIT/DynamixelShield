@@ -8,6 +8,7 @@ fi
 
 # associative array for the platforms that will be verified in build_main_platforms()
 # this will be eval'd in the functions below because arrays can't be exported
+
 export MAIN_PLATFORMS='declare -A main_platforms=([uno]="arduino:avr:uno" [mega2560]="arduino:avr:mega:cpu=atmega2560" [leonardo]="arduino:avr:leonardo" [due]="arduino:sam:arduino_due_x" [zero]="arduino:samd:arduino_zero_native" [mzero]="arduino:samd:mzero_bl" [mzeropro]="arduino:samd:mzero_pro_bl" [mkrzero]="arduino:samd:mkrzero" [mkr1000]="arduino:samd:mkr1000" [mkrwifi1010]="arduino:samd:mkrwifi1010" [opencr]="OpenCR:OpenCR:OpenCR" [portenta]="arduino:mbed_portenta:envie_m7")'
 
 # make display available for arduino CLI
