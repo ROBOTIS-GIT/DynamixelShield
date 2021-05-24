@@ -30,6 +30,7 @@
 //     [Write Torque ON] ID (hex) = 1, Data (hex) = 03 40 00 01
 //     [Write Goal Position=512] ID (hex) = 1, Data (hex) = 03 74 00 00 02 00 00
 //     [Read Present Position] ID (hex) = 1, Data (hex) = 03 84 00 04
+// - https://emanual.robotis.com/docs/en/parts/interface/mkr_shield/#examples
 //
 // Author: Seungmin Lee
 
