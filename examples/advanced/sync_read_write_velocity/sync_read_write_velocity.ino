@@ -64,14 +64,16 @@
   } __attribute__((packed)) InfoBulkWriteInst_t;
 */
 
+const uint8_t BROADCAST_ID = 254;
+const float DYNAMIXEL_PROTOCOL_VERSION = 2.0;
 const uint8_t DXL_ID_CNT = 2;
 const uint8_t DXL_ID_LIST[DXL_ID_CNT] = {1, 2};
 const uint16_t user_pkt_buf_cap = 128;
 uint8_t user_pkt_buf[user_pkt_buf_cap];
 
-const uint16_t SR_START_ADDR = 126;
-const uint16_t SR_ADDR_LEN = 10; //2+4+4
-const uint16_t SW_START_ADDR = 104; //Goal velocity
+const uint16_t SR_START_ADDR = 126; // Starting Data Addr, Can differ Depending on what address to access
+const uint16_t SR_ADDR_LEN = 10; // Data Length (2+4+4), Can differ depending on how many address to access. 
+const uint16_t SW_START_ADDR = 104; 
 const uint16_t SW_ADDR_LEN = 4;
 typedef struct sr_data{
   int16_t present_current;
@@ -102,13 +104,14 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   DEBUG_SERIAL.begin(115200);
   dxl.begin(57600);
+  dxl.setPortProtocolVersion(DYNAMIXEL_PROTOCOL_VERSION);
   
   for(i=0; i<DXL_ID_CNT; i++){
-    dxl.torqueOff(DXL_ID_LIST[i]);
     dxl.setOperatingMode(DXL_ID_LIST[i], OP_VELOCITY);
     dxl.torqueOn(DXL_ID_LIST[i]);
   }
-
+  dxl.torqueOn(BROADCAST_ID);
+  
   // Fill the members of structure to syncRead using external user packet buffer
   sr_infos.packet.p_buf = user_pkt_buf;
   sr_infos.packet.buf_capacity = user_pkt_buf_cap;
@@ -125,7 +128,6 @@ void setup() {
   }
   sr_infos.is_info_changed = true;
 
-
   // Fill the members of structure to syncWrite using internal packet buffer
   sw_infos.packet.p_buf = nullptr;
   sw_infos.packet.is_completed = false;
@@ -136,6 +138,7 @@ void setup() {
 
   sw_data[0].goal_velocity = 0;
   sw_data[1].goal_velocity = 100;
+
   for(i=0; i<DXL_ID_CNT; i++){
     info_xels_sw[i].id = DXL_ID_LIST[i];
     info_xels_sw[i].p_data = (uint8_t*)&sw_data[i].goal_velocity;
