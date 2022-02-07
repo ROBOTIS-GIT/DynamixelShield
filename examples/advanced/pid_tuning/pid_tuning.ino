@@ -16,15 +16,14 @@
 
 // Example Environment
 //
-// - DYNAMIXEL: X series providing Current-based Position Control mode 
+// - DYNAMIXEL: X series
 //              ID = 1, Baudrate = 57600bps, DYNAMIXEL Protocol 2.0
 // - Controller: Arduino MKR ZERO
 //               DYNAMIXEL Shield for Arduino MKR
 // - https://emanual.robotis.com/docs/en/parts/interface/mkr_shield/
+// - Adjust the position_p_gain, position_i_gain, position_d_gain values
 //
 // Author: David Park
-
-// NOTE: Note that "pid.ino" example is mainly designed for DYNAMIXEL with Protocol 2.0. 
 
 #include <DynamixelShield.h>
 
@@ -38,18 +37,19 @@
   #define DEBUG_SERIAL Serial
 #endif
 
-unsigned long timer = 0;
-
 const uint8_t DXL_ID = 1;
+const uint32_t DXL_BAUDRATE = 57600;
 const float DXL_PROTOCOL_VERSION = 2.0;
 
-int32_t pos_profile[3] = {1200, 1600};
+int32_t goal_position[2] = {1200, 1600};
 int8_t direction = 0;
+unsigned long timer = 0;
 
-// Set Position P.I.D Gains. 
-uint16_t pos_d_gain = 0;
-uint16_t pos_i_gain = 0;
-uint16_t pos_p_gain = 0;
+// Position PID Gains
+// Adjust these gains to tune the behavior of DYNAMIXEL
+uint16_t position_p_gain = 0;
+uint16_t position_i_gain = 0;
+uint16_t position_d_gain = 0;
 
 DynamixelShield dxl;
 
@@ -58,11 +58,12 @@ using namespace ControlTableItem;
 
 void setup() {
   // put your setup code here, to run once:
-  // For Uno, Nano, Mini, and Mega, use UART port of DYNAMIXEL Shield to debug.
+  // For Uno, Nano, Mini, and Mega, use the UART port of the DYNAMIXEL Shield to read debugging messages.
   DEBUG_SERIAL.begin(57600);
+  while(!DEBUG_SERIAL);
 
   // Set Port baudrate to 57600bps. This has to match with DYNAMIXEL baudrate.
-  dxl.begin(57600);
+  dxl.begin(DXL_BAUDRATE);
   // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
   dxl.setPortProtocolVersion(DXL_PROTOCOL_VERSION);
   // Get DYNAMIXEL information
@@ -73,38 +74,35 @@ void setup() {
   dxl.setOperatingMode(DXL_ID, OP_POSITION);
   dxl.torqueOn(DXL_ID);
   
-  // Set Position P.I.D Gains.
-  dxl.writeControlTableItem(POSITION_P_GAIN, DXL_ID, pos_p_gain);  
-  dxl.writeControlTableItem(POSITION_I_GAIN, DXL_ID, pos_i_gain);
-  dxl.writeControlTableItem(POSITION_D_GAIN, DXL_ID, pos_d_gain);  
-
-  while(!DEBUG_SERIAL);
+  // Set Position PID Gains
+  dxl.writeControlTableItem(POSITION_P_GAIN, DXL_ID, position_p_gain);
+  dxl.writeControlTableItem(POSITION_I_GAIN, DXL_ID, position_i_gain);
+  dxl.writeControlTableItem(POSITION_D_GAIN, DXL_ID, position_d_gain);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
-  // Read Present Position and see it reaches for the desired position (Use a Serial Plotter)
-  while(1){
-    DEBUG_SERIAL.print("Desired_Position(raw):"); 
-    DEBUG_SERIAL.print(dxl.readControlTableItem(GOAL_POSITION, 1)); 
+  // Read Present Position (Use the Serial Plotter)
+  while(true) {
+    DEBUG_SERIAL.print("Goal Position:");
+    DEBUG_SERIAL.print(dxl.readControlTableItem(GOAL_POSITION, DXL_ID));
     DEBUG_SERIAL.print(",");
-    DEBUG_SERIAL.print("Present_Position(raw):"); 
-    DEBUG_SERIAL.print(dxl.getPresentPosition(DXL_ID)); 
-    DEBUG_SERIAL.print(","); 
+    DEBUG_SERIAL.print("Present Position:");
+    DEBUG_SERIAL.print(dxl.getPresentPosition(DXL_ID));
+    DEBUG_SERIAL.print(",");
     DEBUG_SERIAL.println();
     delay(10);
 
-    if (millis()-timer >= 2000){ 
-      dxl.setGoalPosition(DXL_ID, pos_profile[direction]); 
+    if (millis() - timer >= 2000) {
+      dxl.setGoalPosition(DXL_ID, goal_position[direction]);
       timer = millis();
       break;
     }
   }
-  if(direction >=1){
+
+  if(direction >= 1) {
     direction = 0;
-  }else{
+  } else {
     direction = 1;
   }
-
 }
