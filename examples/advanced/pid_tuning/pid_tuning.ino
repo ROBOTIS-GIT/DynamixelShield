@@ -14,6 +14,7 @@
 * limitations under the License.
 *******************************************************************************/
 
+// Tutorial Video: https://youtu.be/msWlMyx8Nrw
 // Example Environment
 //
 // - DYNAMIXEL: X series
@@ -22,7 +23,6 @@
 //               DYNAMIXEL Shield for Arduino MKR
 // - https://emanual.robotis.com/docs/en/parts/interface/mkr_shield/
 // - Adjust the position_p_gain, position_i_gain, position_d_gain values
-//
 // Author: David Park
 
 #include <DynamixelShield.h>
@@ -84,10 +84,10 @@ void loop() {
   // put your main code here, to run repeatedly:
   // Read Present Position (Use the Serial Plotter)
   while(true) {
-    DEBUG_SERIAL.print("Goal Position:");
+    DEBUG_SERIAL.print("Goal_Position:");
     DEBUG_SERIAL.print(dxl.readControlTableItem(GOAL_POSITION, DXL_ID));
     DEBUG_SERIAL.print(",");
-    DEBUG_SERIAL.print("Present Position:");
+    DEBUG_SERIAL.print("Present_Position:");
     DEBUG_SERIAL.print(dxl.getPresentPosition(DXL_ID));
     DEBUG_SERIAL.print(",");
     DEBUG_SERIAL.println();
