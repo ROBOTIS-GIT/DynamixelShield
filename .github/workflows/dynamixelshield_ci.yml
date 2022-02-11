@@ -29,5 +29,4 @@ jobs:
           build_platform uno
           build_platform mega2560
           build_platform mkrzero
-          build_platform portenta
-          if: github.ref != 'refs/heads/master'          
+          build_platform portenta    
