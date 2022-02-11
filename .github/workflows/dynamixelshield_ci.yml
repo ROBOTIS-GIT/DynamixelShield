@@ -13,6 +13,15 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
+      - name: Run Arduino CI Script
+        if: ${{github.ref}} == 'refs/heads/master' || ${{github.ref}} == 'refs/heads/develop'
+        run: |
+          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.ref}}
+          build_platform opencr
+          build_platform uno
+          build_platform mega2560
+          build_platform mkrzero
+          build_platform portenta
       - name: Run Arduino CI Script (PR)
         run: |
           source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.base_ref}}
@@ -21,11 +30,4 @@ jobs:
           build_platform mega2560
           build_platform mkrzero
           build_platform portenta
-      - name: Run Arduino CI Script 
-        run: |
-          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.ref}}
-          build_platform opencr
-          build_platform uno
-          build_platform mega2560
-          build_platform mkrzero
-          build_platform portenta          
+          if: github.ref != 'refs/heads/master'          
