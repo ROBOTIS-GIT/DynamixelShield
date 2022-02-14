@@ -66,11 +66,11 @@ branch_develop = "develop"
 branch_pull_request = $1
 
 # Install DYNAMIXELShield package
-if [ $1 == $branch_master ]; then
+if [ $1 == "$branch_master" ]; then
   git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_master --single-branch
-elif [ $1 == $branch_develop ]; then
+elif [ $1 == "$branch_develop" ]; then
   git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_develop --single-branch
-elif [ $1 == $branch_pull_request ] ; then
+elif [ $1 == "$branch_pull_request" ] ; then
   git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_pull_request --single-branch
 else
   echo -e "\xe2\x9c\x93";
