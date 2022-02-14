@@ -14,9 +14,8 @@ jobs:
       - name: Run Arduino CI Script (PR)
         if: github.event_name == 'pull_request'     
         run: |
-          echo ${{github.head_ref}}
+          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/ROBOTIS-David-patch-1/install.sh) ${{github.head_ref}}
       - name: Run Arduino CI Script (Push)
         if: github.event_name == 'push'
         run: |
-          echo ${{github.ref_name}}
-
+          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/ROBOTIS-David-patch-1/install.sh) ${{github.ref_name}}
