@@ -61,10 +61,17 @@ DEPENDENCY_OUTPUT=$(arduino --install-library USBHost > /dev/null 2>&1)
 if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 
 # Install DYNAMIXELShield package
-if [ $1 == "refs/heads/master" ]; then
-  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch master --single-branch
-elif [ $1 == "refs/heads/develop" ]; then
-  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch develop --single-branch
+branch_master = 'master'
+branch_develop = 'develop'
+branch_pull_request = $1
+
+# Install DYNAMIXELShield package
+if [ $1 == $branch_master ]; then
+  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_master --single-branch
+elif [ $1 == $branch_develop ]; then
+  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_develop --single-branch
+elif [ $1 == $branch_pull_request ] ; then
+  git clone --recursive https://github.com/ROBOTIS-GIT/DynamixelShield.git --branch $branch_pull_request --single-branch
 else
   echo -e "\xe2\x9c\x93";
 fi
