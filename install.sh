@@ -63,7 +63,7 @@ if [ $? -ne 0 ]; then echo -e "\xe2\x9c\x96"; else echo -e "\xe2\x9c\x93"; fi
 # Install DYNAMIXELShield package
 branch_master="master"
 branch_develop="develop"
-branch_pull_request = $1
+branch_pull_request=$1
 
 # Install DYNAMIXELShield package
 if [ $1 == "$branch_master" ]; then
