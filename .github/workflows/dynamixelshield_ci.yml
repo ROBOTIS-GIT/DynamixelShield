@@ -14,9 +14,9 @@ jobs:
       - name: Run Arduino CI Script (PR)
         if: github.event_name == 'pull_request'     
         run: |
-          ${{github.head_ref}}
+          echo ${{github.head_ref}}
       - name: Run Arduino CI Script (Push)
         if: github.event_name == 'push'
         run: |
-          ${{github.ref_name}}
+          echo ${{github.ref_name}}
 
