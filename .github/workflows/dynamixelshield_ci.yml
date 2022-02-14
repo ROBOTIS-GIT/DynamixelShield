@@ -1,6 +1,36 @@
 name: dynamixelshield_ci
 
 on:
+  branch_protection_rule:
+  check_run:
+  check_suite:
+  create:
+  delete:
+  deployment:
+  deployment_status:
+  discussion:
+  discussion_comment:
+  fork:
+  gollum:
+  issue_comment:
+  issues:
+  label:
+  member:
+  milestone:
+  page_build:
+  project:
+  project_card:
+  project_column:
+  public:
+  pull_request_review:
+  pull_request_review_comment:
+  release:
+  repository_dispatch:
+  status:
+  watch:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Test]
   push:
     branches: [ master, develop ]
   pull_request:
