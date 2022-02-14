@@ -12,12 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Arduino CI Script (PR)
+        if: github.event_name == 'pull_request'     
         run: |
           echo ${{github.head_ref}};
-          echo ${{github.event_name}};
-        if: ${{github.event_name}} == 'pull_request'          
+          echo ${{github.event_name}} run ! ;
       - name: Run Arduino CI Script (Push)
+        if: github.event_name == 'push'
         run: |
           echo ${{github.ref}};
-          echo ${{github.event_name}};
-        if: ${{github.event_name}} == 'push'          
+          echo ${{github.event_name}} run ! ;
