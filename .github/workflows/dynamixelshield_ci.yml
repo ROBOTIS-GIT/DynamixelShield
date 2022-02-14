@@ -14,19 +14,9 @@ jobs:
       - name: Run Arduino CI Script (PR)
         if: github.event_name == 'pull_request'     
         run: |
-          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.head_ref}}
-          build_platform opencr
-          build_platform uno
-          build_platform mega2560
-          build_platform mkrzero
-          build_platform portenta
+          ${{github.head_ref}}
       - name: Run Arduino CI Script (Push)
         if: github.event_name == 'push'
         run: |
-          source <(curl -SLs https://raw.githubusercontent.com/ROBOTIS-GIT/DynamixelShield/master/install.sh) ${{github.ref}}
-          build_platform opencr
-          build_platform uno
-          build_platform mega2560
-          build_platform mkrzero
-          build_platform portenta
+          ${{github.ref_name}}
 
