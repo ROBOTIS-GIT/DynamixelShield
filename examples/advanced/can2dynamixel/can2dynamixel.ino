@@ -95,6 +95,8 @@ const uint8_t RX_BUFFER_SIZE = 30;
 const CanBitRate CAN_BUADRATE = CanBitRate::BR_1000kBPS_16MHZ;
 
 // Define the DYNAMIXEL Protocol version to use.
+// MX and AX servos use DYNAMIXEL Protocol 1.0 by default.
+// to use MX and AX servos with this example, change the following line to: const float DXL_PROTOCOL_VERSION = 1.0;
 const float DXL_PROTOCOL_VERSION = 2.0;
 // Define the Baud Rate of DYNAMIXEL to use. Recommend not to exceed 1Mbps.
 const uint32_t DXL_BUADRATE = 1000000;

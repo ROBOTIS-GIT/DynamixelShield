@@ -40,7 +40,8 @@ DynamixelShield dxl;
 
 // Number of PWM Channels
 const uint8_t PWM_CHANNEL_SIZE = 8;
-// DYNAMIXEL Protocol Version [1.0 / 2.0]
+// MX and AX servos use DYNAMIXEL Protocol 1.0 by default.
+// to use MX and AX servos with this example, change the following line to: const float DXL_PROTOCOL_VERSION = 1.0;
 const float DXL_PROTOCOL_VERSION = 2.0;
 // DYNAMIXEL Baudrate
 const uint32_t DXL_BUADRATE = 1000000;
